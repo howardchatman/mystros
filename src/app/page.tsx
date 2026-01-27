@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, MapPin, Phone, Clock, Users, Award, CheckCircle } from "lucide-react";
-import { HeroSection } from "@/components/marketing/hero-section";
+import { ArrowRight, MapPin, Phone, Clock } from "lucide-react";
+import { HeroSectionV2 } from "@/components/marketing/hero-section-v2";
+import { Header } from "@/components/marketing/header";
 import { TextureBackground, GlassCard, GradientText } from "@/components/marketing/texture-background";
 
 // Import content data
@@ -17,34 +18,13 @@ export default function HomePage() {
   const featuredVideo = videosData.videos.find((v) => v.isFeatured);
 
   return (
-    <main id="main-content">
-      {/* Hero Section */}
-      <HeroSection variant="home" />
+    <>
+      {/* Sticky Header */}
+      <Header />
 
-      {/* Trust Badges */}
-      <section className="border-b border-brand-primary/20 bg-brand-elevated/30 py-6">
-        <div className="container-wide">
-          <div className="flex flex-wrap items-center justify-center gap-8 text-center">
-            <div className="flex items-center gap-2">
-              <Award className="h-5 w-5 text-brand-accent" />
-              <span className="text-sm font-medium text-brand-text">COE Accredited</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-brand-accent" />
-              <span className="text-sm font-medium text-brand-text">TDLR Licensed</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-brand-text">
-                FAFSA Code: <span className="text-brand-accent">042609</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-brand-accent" />
-              <span className="text-sm font-medium text-brand-text">Title IV Eligible</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <main id="main-content">
+        {/* Hero Section V2 - Video Background */}
+        <HeroSectionV2 />
 
       {/* Programs Section */}
       <TextureBackground
@@ -300,10 +280,7 @@ export default function HomePage() {
                     {testimonial.name}
                   </p>
                   <p className="text-sm text-brand-muted">
-                    {testimonial.currentPosition}
-                  </p>
-                  <p className="text-xs text-brand-muted">
-                    {testimonial.campus} • Class of {testimonial.graduationYear}
+                    {testimonial.role}
                   </p>
                 </div>
               </GlassCard>
@@ -514,6 +491,7 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
-    </main>
+      </main>
+    </>
   );
 }
