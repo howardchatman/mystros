@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Toaster } from "sonner";
+import { AuthProvider } from "@/components/providers/auth-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 
 // Load Inter as the primary font
@@ -111,16 +114,31 @@ export default function RootLayout({
         <link rel="preconnect" href="https://www.youtube-nocookie.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
       </head>
-      <body className="min-h-screen bg-brand-bg font-sans antialiased">
-        {/* Skip to main content for accessibility */}
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand-accent focus:px-4 focus:py-2 focus:text-white focus:outline-none"
-        >
-          Skip to main content
-        </a>
+      <body className="min-h-screen bg-background font-sans antialiased">
+        <ThemeProvider>
+          {/* Skip to main content for accessibility */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:outline-none"
+          >
+            Skip to main content
+          </a>
 
-        {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              classNames: {
+                toast: "bg-card border-border text-card-foreground",
+                title: "text-foreground",
+                description: "text-muted-foreground",
+              },
+            }}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );

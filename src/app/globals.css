@@ -9,7 +9,7 @@
 
 @layer base {
   :root {
-    /* Brand Colors as CSS Variables */
+    /* Brand Colors as CSS Variables - Dark Mode (default) */
     --brand-bg: 222 47% 5%;
     --brand-elevated: 222 47% 11%;
     --brand-primary: 213 52% 25%;
@@ -20,7 +20,7 @@
     --brand-muted: 215 16% 47%;
     --brand-gold: 43 74% 52%;
 
-    /* Semantic tokens (shadcn/ui compatible) */
+    /* Semantic tokens (shadcn/ui compatible) - Dark Mode */
     --background: 222 47% 5%;
     --foreground: 210 40% 98%;
 
@@ -59,7 +59,49 @@
     --chart-5: 30 80% 55%;
   }
 
-  /* Ensure dark mode is default (no light mode variant needed) */
+  /* Light Mode Variables */
+  .light {
+    /* Brand Colors - Light Mode */
+    --brand-bg: 210 40% 98%;
+    --brand-elevated: 0 0% 100%;
+    --brand-primary: 213 52% 45%;
+    --brand-accent: 217 91% 50%;
+    --brand-accent2: 213 94% 58%;
+    --brand-ice: 213 92% 35%;
+    --brand-text: 222 47% 11%;
+    --brand-muted: 215 16% 40%;
+    --brand-gold: 43 74% 45%;
+
+    /* Semantic tokens - Light Mode */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 217 91% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 213 52% 90%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 92%;
+    --muted-foreground: 215 16% 40%;
+
+    --accent: 213 94% 95%;
+    --accent-foreground: 217 91% 50%;
+
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 213 32% 85%;
+    --input: 213 32% 85%;
+    --ring: 217 91% 50%;
+  }
+
   * {
     @apply border-border;
   }
@@ -69,7 +111,7 @@
   }
 
   body {
-    @apply bg-brand-bg text-brand-text antialiased;
+    @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -84,15 +126,15 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-brand-bg;
+    @apply bg-background;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-brand-primary rounded-full;
+    @apply bg-muted rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-brand-accent;
+    @apply bg-primary;
   }
 }
 
@@ -145,14 +187,23 @@
 
   .glass-card {
     @apply relative overflow-hidden rounded-xl;
-    @apply bg-brand-elevated/50 backdrop-blur-xl;
-    @apply border border-white/5;
+    @apply bg-card/50 backdrop-blur-xl;
+    @apply border border-border/50;
     @apply shadow-card;
     @apply transition-all duration-300;
   }
 
   .glass-card:hover {
-    @apply border-brand-accent/20 shadow-card-hover;
+    @apply border-primary/20 shadow-card-hover;
+  }
+
+  /* Light mode glass card adjustments */
+  .light .glass-card {
+    @apply bg-card/80 border-border shadow-lg;
+  }
+
+  .light .glass-card:hover {
+    @apply border-primary/30 shadow-xl;
   }
 
   /* Glass card with glow effect */
