@@ -97,31 +97,31 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Student trying to access student routes - check if they need intake
-  if (pathname.startsWith("/dashboard") || pathname.startsWith("/hours") ||
-      pathname.startsWith("/documents") || pathname.startsWith("/financial-aid") ||
-      pathname.startsWith("/profile")) {
-    const { data: profile } = await supabase
-      .from("user_profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-
-    // Only check intake for students
-    if (profile?.role === "student" && !pathname.startsWith("/intake")) {
-      // Check if student has a submitted application
-      const { data: application } = await supabase
-        .from("applications")
-        .select("id, submitted_at")
-        .eq("user_id", user.id)
-        .single();
-
-      // If no application or not submitted, redirect to intake
-      if (!application || !application.submitted_at) {
-        return NextResponse.redirect(new URL("/intake", request.url));
-      }
-    }
-  }
+  // Note: Intake redirect is disabled for now - dashboard will show
+  // application prompt to students without a submitted application
+  //
+  // To re-enable: Uncomment the block below
+  // if (pathname.startsWith("/dashboard") || pathname.startsWith("/hours") ||
+  //     pathname.startsWith("/documents") || pathname.startsWith("/financial-aid") ||
+  //     pathname.startsWith("/profile")) {
+  //   const { data: profile } = await supabase
+  //     .from("user_profiles")
+  //     .select("role")
+  //     .eq("id", user.id)
+  //     .single();
+  //
+  //   if (profile?.role === "student" && !pathname.startsWith("/intake")) {
+  //     const { data: application } = await supabase
+  //       .from("applications")
+  //       .select("id, submitted_at")
+  //       .eq("user_id", user.id)
+  //       .single();
+  //
+  //     if (!application || !application.submitted_at) {
+  //       return NextResponse.redirect(new URL("/intake", request.url));
+  //     }
+  //   }
+  // }
 
   return response;
 }

@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import MystrosChat from "@/components/MystrosChat";
 import "./globals.css";
 
 // Load Inter as the primary font
@@ -126,6 +127,7 @@ export default function RootLayout({
 
           <AuthProvider>
             {children}
+            <MystrosChat />
           </AuthProvider>
 
           <Toaster
