@@ -184,10 +184,10 @@ export function Header() {
                 <span className="hidden xl:inline">(832) 286-4248</span>
               </a>
               <Link
-                href="/student-portal"
+                href="/login"
                 className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
               >
-                Student Login
+                Sign In
               </Link>
               <Link
                 href="/apply"
@@ -280,11 +280,11 @@ export function Header() {
               (832) 286-4248
             </a>
             <Link
-              href="/student-portal"
+              href="/login"
               onClick={() => setIsMobileMenuOpen(false)}
               className="flex items-center justify-center w-full py-4 rounded-xl border border-border text-foreground font-medium hover:bg-muted/50 transition-colors"
             >
-              Student Login
+              Sign In
             </Link>
             <Link
               href="/apply"
