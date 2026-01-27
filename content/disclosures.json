@@ -1,0 +1,206 @@
+{
+  "consumerDisclosures": {
+    "title": "Consumer Disclosures",
+    "description": "In compliance with federal regulations, Mystros Barber Academy provides the following consumer information to prospective and enrolled students.",
+    "lastUpdated": "2025-01-01",
+    "sections": [
+      {
+        "id": "accreditation",
+        "title": "Accreditation",
+        "content": "Mystros Barber Academy is accredited by the Council on Occupational Education (COE). COE is recognized by the U.S. Department of Education as a national accrediting agency.",
+        "links": [
+          {
+            "label": "Council on Occupational Education",
+            "url": "https://council.org"
+          }
+        ]
+      },
+      {
+        "id": "licensing",
+        "title": "State Licensing",
+        "content": "Mystros Barber Academy is licensed by the Texas Department of Licensing and Regulation (TDLR) to operate as a barber school in the State of Texas.",
+        "links": [
+          {
+            "label": "TDLR Barber Program",
+            "url": "https://www.tdlr.texas.gov/barbers/barbers.htm"
+          }
+        ]
+      },
+      {
+        "id": "financial-aid",
+        "title": "Financial Aid Information",
+        "content": "Mystros Barber Academy participates in Title IV federal financial aid programs. Our FAFSA school code is 042609.",
+        "items": [
+          "Federal Pell Grant",
+          "Federal Direct Subsidized Loans",
+          "Federal Direct Unsubsidized Loans"
+        ],
+        "links": [
+          {
+            "label": "Apply for FAFSA",
+            "url": "https://studentaid.gov/h/apply-for-aid/fafsa"
+          },
+          {
+            "label": "Net Price Calculator",
+            "url": "/student-resources#net-price-calculator"
+          }
+        ]
+      },
+      {
+        "id": "completion-rates",
+        "title": "Completion & Graduation Rates",
+        "content": "The following rates are based on the most recent cohort data available.",
+        "data": {
+          "completionRate": "92%",
+          "graduationRate": "92%",
+          "cohortYear": "2023-2024"
+        }
+      },
+      {
+        "id": "placement-rates",
+        "title": "Job Placement Rates",
+        "content": "Mystros Barber Academy maintains strong relationships with barbershops and salons throughout the Houston metropolitan area.",
+        "data": {
+          "placementRate": "88%",
+          "cohortYear": "2023-2024"
+        }
+      },
+      {
+        "id": "costs",
+        "title": "Cost of Attendance",
+        "content": "Total program costs including tuition, fees, books, and supplies.",
+        "programs": [
+          {
+            "name": "Class A Barber (1000 Hours)",
+            "tuition": "$15,500",
+            "fees": "$100",
+            "booksSupplies": "$1,200",
+            "total": "$16,800"
+          },
+          {
+            "name": "Crossover Program (300 Hours)",
+            "tuition": "$4,650",
+            "fees": "$100",
+            "booksSupplies": "$600",
+            "total": "$5,350"
+          }
+        ]
+      },
+      {
+        "id": "refund-policy",
+        "title": "Refund Policy",
+        "content": "Mystros Barber Academy maintains a refund policy in accordance with federal, state, and accreditation requirements. Please refer to the enrollment agreement for complete details.",
+        "summary": [
+          "Full refund if student withdraws before classes begin",
+          "Pro-rata refund based on hours completed during first 60% of program",
+          "No refund after completing more than 60% of program hours"
+        ]
+      },
+      {
+        "id": "ferpa",
+        "title": "Privacy Rights (FERPA)",
+        "content": "The Family Educational Rights and Privacy Act (FERPA) affords students certain rights with respect to their education records.",
+        "rights": [
+          "The right to inspect and review education records",
+          "The right to request amendment of records",
+          "The right to consent to disclosures of personally identifiable information",
+          "The right to file a complaint with the U.S. Department of Education"
+        ]
+      },
+      {
+        "id": "satisfactory-progress",
+        "title": "Satisfactory Academic Progress (SAP)",
+        "content": "Students must maintain satisfactory academic progress to remain eligible for financial aid.",
+        "requirements": [
+          "Minimum 70% cumulative grade average",
+          "Minimum 67% attendance rate",
+          "Complete program within 150% of normal timeframe"
+        ]
+      },
+      {
+        "id": "drug-free",
+        "title": "Drug-Free Campus Policy",
+        "content": "Mystros Barber Academy maintains a drug-free campus in compliance with the Drug-Free Schools and Communities Act."
+      },
+      {
+        "id": "voter-registration",
+        "title": "Voter Registration",
+        "content": "Students are encouraged to register to vote. Voter registration forms are available at both campus locations.",
+        "links": [
+          {
+            "label": "Texas Voter Registration",
+            "url": "https://www.votetexas.gov/register-to-vote/"
+          }
+        ]
+      },
+      {
+        "id": "constitution-day",
+        "title": "Constitution Day",
+        "content": "Mystros Barber Academy observes Constitution Day annually on September 17th with educational activities."
+      },
+      {
+        "id": "complaints",
+        "title": "Student Complaint Procedure",
+        "content": "Students with complaints should first attempt to resolve issues with instructors or campus administration. Unresolved complaints may be directed to:",
+        "contacts": [
+          {
+            "entity": "Texas Department of Licensing and Regulation",
+            "address": "P.O. Box 12157, Austin, TX 78711",
+            "phone": "800-803-9202"
+          },
+          {
+            "entity": "Council on Occupational Education",
+            "address": "7840 Roswell Road, Building 300, Suite 325, Atlanta, GA 30350",
+            "phone": "770-396-3898"
+          }
+        ]
+      }
+    ]
+  },
+  "accreditation": {
+    "name": "Council on Occupational Education",
+    "abbreviation": "COE",
+    "description": "The Council on Occupational Education is a national institutional accrediting agency recognized by the U.S. Department of Education.",
+    "website": "https://council.org",
+    "contact": {
+      "address": "7840 Roswell Road, Building 300, Suite 325, Atlanta, GA 30350",
+      "phone": "770-396-3898",
+      "fax": "770-396-3790"
+    },
+    "recognition": [
+      "U.S. Department of Education",
+      "Council for Higher Education Accreditation (CHEA)"
+    ]
+  },
+  "stateLicensing": {
+    "agency": "Texas Department of Licensing and Regulation",
+    "abbreviation": "TDLR",
+    "division": "Barber Program",
+    "website": "https://www.tdlr.texas.gov/barbers/barbers.htm",
+    "contact": {
+      "address": "P.O. Box 12157, Austin, TX 78711",
+      "phone": "800-803-9202"
+    },
+    "licenseTypes": [
+      {
+        "name": "Class A Barber License",
+        "requirements": [
+          "Complete 1000 hours of barber training",
+          "Pass written examination",
+          "Pass practical examination",
+          "Be at least 17 years of age",
+          "Have high school diploma or GED"
+        ]
+      },
+      {
+        "name": "Class A Barber License (Crossover)",
+        "requirements": [
+          "Hold valid Texas Cosmetology Operator License",
+          "Complete 300 hours of barber training",
+          "Pass written examination",
+          "Pass practical examination"
+        ]
+      }
+    ]
+  }
+}

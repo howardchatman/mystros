@@ -1,0 +1,79 @@
+{
+  "campuses": [
+    {
+      "id": "north",
+      "code": "NORTH",
+      "name": "North Campus",
+      "shortName": "North Houston",
+      "address": {
+        "line1": "1434 FM 1960 Suite B",
+        "city": "Houston",
+        "state": "TX",
+        "zip": "77090",
+        "full": "1434 FM 1960 Suite B, Houston, TX 77090"
+      },
+      "phone": "832-286-4248",
+      "phoneFormatted": "(832) 286-4248",
+      "email": "INFOMYSTROSBARBERACADEMY@GMAIL.COM",
+      "hours": {
+        "weekday": "9:00 AM - 9:00 PM",
+        "saturday": "9:00 AM - 5:00 PM",
+        "sunday": "Closed"
+      },
+      "coordinates": {
+        "lat": 29.9531,
+        "lng": -95.4836
+      },
+      "googleMapsUrl": "https://maps.google.com/?q=1434+FM+1960+Suite+B+Houston+TX+77090",
+      "features": [
+        "Full-Service Training Floor",
+        "Modern Equipment",
+        "Student Parking",
+        "Accessible Facility"
+      ],
+      "programs": ["class-a-barber", "crossover"],
+      "isActive": true,
+      "isPrimary": true
+    },
+    {
+      "id": "missouri-city",
+      "code": "MOCITY",
+      "name": "Missouri City Campus",
+      "shortName": "Missouri City",
+      "address": {
+        "line1": "2420 Cartwright Rd",
+        "city": "Missouri City",
+        "state": "TX",
+        "zip": "77489",
+        "full": "2420 Cartwright Rd, Missouri City, TX 77489"
+      },
+      "phone": "281-969-7565",
+      "phoneFormatted": "(281) 969-7565",
+      "email": "INFOMYSTROSBARBERACADEMY@GMAIL.COM",
+      "hours": {
+        "weekday": "9:00 AM - 9:00 PM",
+        "saturday": "9:00 AM - 5:00 PM",
+        "sunday": "Closed"
+      },
+      "coordinates": {
+        "lat": 29.5752,
+        "lng": -95.5363
+      },
+      "googleMapsUrl": "https://maps.google.com/?q=2420+Cartwright+Rd+Missouri+City+TX+77489",
+      "features": [
+        "Full-Service Training Floor",
+        "Modern Equipment",
+        "Student Parking",
+        "Accessible Facility"
+      ],
+      "programs": ["class-a-barber", "crossover"],
+      "isActive": true,
+      "isPrimary": false
+    }
+  ],
+  "contact": {
+    "primaryEmail": "INFOMYSTROSBARBERACADEMY@GMAIL.COM",
+    "fafsaCode": "042609",
+    "accreditation": "COE (Council on Occupational Education)"
+  }
+}

@@ -1,0 +1,508 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   MYSTROS BARBER ACADEMY - GLOBAL STYLES
+   Premium academy design with textured backgrounds and glassmorphism
+   ============================================================================ */
+
+@layer base {
+  :root {
+    /* Brand Colors as CSS Variables */
+    --brand-bg: 222 47% 5%;
+    --brand-elevated: 222 47% 11%;
+    --brand-primary: 213 52% 25%;
+    --brand-accent: 217 91% 60%;
+    --brand-accent2: 213 94% 68%;
+    --brand-ice: 213 92% 79%;
+    --brand-text: 210 40% 98%;
+    --brand-muted: 215 16% 47%;
+    --brand-gold: 43 74% 52%;
+
+    /* Semantic tokens (shadcn/ui compatible) */
+    --background: 222 47% 5%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 213 52% 25%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 222 47% 15%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 213 94% 68%;
+    --accent-foreground: 222 47% 5%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 213 52% 20%;
+    --input: 213 52% 20%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    /* Chart colors */
+    --chart-1: 217 91% 60%;
+    --chart-2: 43 74% 52%;
+    --chart-3: 160 84% 39%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 30 80% 55%;
+  }
+
+  /* Ensure dark mode is default (no light mode variant needed) */
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-brand-bg text-brand-text antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Custom selection colors */
+  ::selection {
+    @apply bg-brand-accent/30 text-brand-text;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-brand-bg;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-brand-primary rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-brand-accent;
+  }
+}
+
+@layer components {
+  /* ============================================================================
+     TEXTURE OVERLAYS
+     ============================================================================ */
+
+  /* Noise texture overlay - use on containers */
+  .texture-noise {
+    position: relative;
+  }
+
+  .texture-noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('/textures/noise.svg');
+    background-repeat: repeat;
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Blueprint pattern overlay - subtle technical grid */
+  .texture-blueprint {
+    position: relative;
+  }
+
+  .texture-blueprint::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('/textures/blueprint.svg');
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Combined texture for hero sections */
+  .texture-hero {
+    @apply texture-noise texture-blueprint;
+  }
+
+  /* ============================================================================
+     GLASSMORPHISM CARDS
+     ============================================================================ */
+
+  .glass-card {
+    @apply relative overflow-hidden rounded-xl;
+    @apply bg-brand-elevated/50 backdrop-blur-xl;
+    @apply border border-white/5;
+    @apply shadow-card;
+    @apply transition-all duration-300;
+  }
+
+  .glass-card:hover {
+    @apply border-brand-accent/20 shadow-card-hover;
+  }
+
+  /* Glass card with glow effect */
+  .glass-card-glow {
+    @apply glass-card;
+    @apply shadow-glow-sm;
+  }
+
+  .glass-card-glow:hover {
+    @apply shadow-glow-md;
+  }
+
+  /* Premium card variant with accent border */
+  .glass-card-premium {
+    @apply glass-card;
+    @apply border-brand-gold/20;
+  }
+
+  .glass-card-premium:hover {
+    @apply border-brand-gold/40;
+  }
+
+  /* ============================================================================
+     GRADIENT BACKGROUNDS
+     ============================================================================ */
+
+  /* Radial gradient spot (position with positioning utilities) */
+  .gradient-spot {
+    @apply absolute rounded-full blur-3xl;
+    @apply bg-brand-accent/10;
+    pointer-events: none;
+  }
+
+  .gradient-spot-gold {
+    @apply gradient-spot bg-brand-gold/10;
+  }
+
+  /* Hero section gradient */
+  .gradient-hero {
+    @apply bg-gradient-to-br from-brand-bg via-brand-primary/30 to-brand-bg;
+  }
+
+  /* Accent gradient for buttons and highlights */
+  .gradient-accent {
+    @apply bg-gradient-to-r from-brand-accent to-brand-accent2;
+  }
+
+  /* Gold gradient for premium elements */
+  .gradient-gold {
+    @apply bg-gradient-to-r from-brand-gold via-amber-300 to-brand-gold;
+  }
+
+  /* ============================================================================
+     BUTTONS
+     ============================================================================ */
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply px-6 py-3 rounded-lg font-semibold;
+    @apply bg-brand-accent text-white;
+    @apply transition-all duration-200;
+    @apply hover:bg-brand-accent2 hover:shadow-glow-sm;
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-offset-2 focus:ring-offset-brand-bg;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply px-6 py-3 rounded-lg font-semibold;
+    @apply bg-brand-primary/50 text-brand-text border border-brand-primary;
+    @apply transition-all duration-200;
+    @apply hover:bg-brand-primary hover:border-brand-accent;
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-offset-2 focus:ring-offset-brand-bg;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply px-6 py-3 rounded-lg font-semibold;
+    @apply bg-transparent text-brand-accent border border-brand-accent;
+    @apply transition-all duration-200;
+    @apply hover:bg-brand-accent/10;
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-offset-2 focus:ring-offset-brand-bg;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply px-4 py-2 rounded-lg font-medium;
+    @apply bg-transparent text-brand-text;
+    @apply transition-all duration-200;
+    @apply hover:bg-white/5;
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-accent focus:ring-offset-2 focus:ring-offset-brand-bg;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* CTA button with glow animation */
+  .btn-cta {
+    @apply btn-primary;
+    @apply animate-pulse-glow;
+  }
+
+  /* ============================================================================
+     FORM INPUTS
+     ============================================================================ */
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg;
+    @apply bg-brand-elevated/50 backdrop-blur-sm;
+    @apply border border-brand-primary/30;
+    @apply text-brand-text placeholder:text-brand-muted;
+    @apply transition-all duration-200;
+    @apply focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .input-field-error {
+    @apply input-field border-destructive focus:border-destructive focus:ring-destructive/20;
+  }
+
+  /* ============================================================================
+     STATUS BADGES
+     ============================================================================ */
+
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-default {
+    @apply badge bg-brand-primary/30 text-brand-ice border border-brand-primary/50;
+  }
+
+  .badge-success {
+    @apply badge bg-emerald-500/20 text-emerald-400 border border-emerald-500/30;
+  }
+
+  .badge-warning {
+    @apply badge bg-amber-500/20 text-amber-400 border border-amber-500/30;
+  }
+
+  .badge-error {
+    @apply badge bg-red-500/20 text-red-400 border border-red-500/30;
+  }
+
+  .badge-info {
+    @apply badge bg-brand-accent/20 text-brand-accent2 border border-brand-accent/30;
+  }
+
+  .badge-gold {
+    @apply badge bg-brand-gold/20 text-brand-gold border border-brand-gold/30;
+  }
+
+  /* ============================================================================
+     NAVIGATION
+     ============================================================================ */
+
+  .nav-link {
+    @apply relative px-4 py-2 text-brand-muted font-medium;
+    @apply transition-colors duration-200;
+    @apply hover:text-brand-text;
+  }
+
+  .nav-link::after {
+    content: "";
+    @apply absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5;
+    @apply bg-brand-accent rounded-full;
+    @apply transition-all duration-200;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    @apply w-full;
+  }
+
+  .nav-link.active {
+    @apply text-brand-text;
+  }
+
+  /* ============================================================================
+     SECTION HEADERS
+     ============================================================================ */
+
+  .section-heading {
+    @apply text-3xl md:text-4xl lg:text-5xl font-display font-bold text-brand-text;
+  }
+
+  .section-subheading {
+    @apply text-lg md:text-xl text-brand-muted max-w-2xl;
+  }
+
+  .section-eyebrow {
+    @apply text-sm uppercase tracking-widest text-brand-accent font-semibold mb-2;
+  }
+
+  /* ============================================================================
+     VIDEO PLAYER
+     ============================================================================ */
+
+  .video-container {
+    @apply relative aspect-video rounded-xl overflow-hidden;
+    @apply bg-brand-elevated;
+    @apply border border-white/5;
+    @apply shadow-card;
+  }
+
+  .video-container iframe {
+    @apply absolute inset-0 w-full h-full;
+  }
+
+  /* ============================================================================
+     DATA TABLES
+     ============================================================================ */
+
+  .data-table {
+    @apply w-full text-sm;
+  }
+
+  .data-table th {
+    @apply px-4 py-3 text-left text-brand-muted font-medium uppercase tracking-wider text-xs;
+    @apply bg-brand-primary/20 border-b border-brand-primary/30;
+  }
+
+  .data-table td {
+    @apply px-4 py-3 text-brand-text;
+    @apply border-b border-brand-primary/20;
+  }
+
+  .data-table tr:hover td {
+    @apply bg-brand-primary/10;
+  }
+
+  /* ============================================================================
+     LOADING STATES
+     ============================================================================ */
+
+  .skeleton {
+    @apply animate-pulse bg-brand-primary/30 rounded;
+  }
+
+  .skeleton-text {
+    @apply skeleton h-4 w-full;
+  }
+
+  .skeleton-heading {
+    @apply skeleton h-8 w-3/4;
+  }
+
+  .skeleton-avatar {
+    @apply skeleton h-10 w-10 rounded-full;
+  }
+
+  /* Shimmer effect for loading cards */
+  .shimmer {
+    @apply relative overflow-hidden;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+
+  /* ============================================================================
+     RESPONSIVE UTILITIES
+     ============================================================================ */
+
+  .container-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-wide {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-full {
+    @apply w-full px-4 sm:px-6 lg:px-8;
+  }
+}
+
+@layer utilities {
+  /* Text gradient utility */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-accent to-brand-accent2;
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-gold via-amber-300 to-brand-gold;
+  }
+
+  /* Blur edge fade */
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  }
+
+  .mask-fade-t {
+    mask-image: linear-gradient(to top, black 80%, transparent 100%);
+  }
+
+  /* Focus visible for accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 focus-visible:ring-offset-brand-bg;
+  }
+
+  /* Hide scrollbar but allow scrolling */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Prevent text selection */
+  .no-select {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Safe area padding for mobile */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+@media print {
+  body {
+    @apply bg-white text-black;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .glass-card {
+    @apply bg-white border-gray-200 shadow-none;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    @apply bg-gray-200 text-black border-gray-400;
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "videos": [
+    {
+      "id": "reentry-program-pt1",
+      "title": "Mystros Barber Academy - Reentry Program Pt.1",
+      "description": "Learn about our reentry program designed to help formerly incarcerated individuals start a new career in barbering.",
+      "youtubeId": "4uVc29xjiGM",
+      "youtubeUrl": "https://www.youtube.com/watch?v=4uVc29xjiGM",
+      "embedUrl": "https://www.youtube-nocookie.com/embed/4uVc29xjiGM",
+      "thumbnail": "https://i.ytimg.com/vi/4uVc29xjiGM/maxresdefault.jpg",
+      "duration": null,
+      "category": "community",
+      "tags": ["reentry", "community", "second-chance", "featured"],
+      "campusId": null,
+      "isFeatured": true,
+      "sortOrder": 1,
+      "publishedAt": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": "community",
+      "name": "Community Events",
+      "slug": "community",
+      "description": "See how Mystros gives back to the Houston community through events and outreach programs.",
+      "icon": "users"
+    },
+    {
+      "id": "tutorials",
+      "name": "Video Tutorials",
+      "slug": "tutorials",
+      "description": "Learn barbering techniques from our expert instructors.",
+      "icon": "play-circle"
+    },
+    {
+      "id": "student-stories",
+      "name": "Student Stories",
+      "slug": "student-stories",
+      "description": "Hear from our students and graduates about their journey.",
+      "icon": "heart"
+    },
+    {
+      "id": "campus-tours",
+      "name": "Campus Tours",
+      "slug": "campus-tours",
+      "description": "Take a virtual tour of our state-of-the-art facilities.",
+      "icon": "building"
+    },
+    {
+      "id": "industry-insights",
+      "name": "Industry Insights",
+      "slug": "industry-insights",
+      "description": "Expert perspectives on the barbering industry and career opportunities.",
+      "icon": "trending-up"
+    }
+  ],
+  "embedConfig": {
+    "baseUrl": "https://www.youtube-nocookie.com/embed/",
+    "defaultParams": {
+      "rel": 0,
+      "modestbranding": 1,
+      "playsinline": 1
+    },
+    "allowedFeatures": [
+      "accelerometer",
+      "autoplay",
+      "clipboard-write",
+      "encrypted-media",
+      "gyroscope",
+      "picture-in-picture",
+      "web-share"
+    ]
+  }
+}

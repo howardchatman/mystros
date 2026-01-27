@@ -1,0 +1,324 @@
+{
+  "programs": [
+    {
+      "id": "class-a-barber",
+      "code": "BARBER-1000",
+      "name": "Class A Barber",
+      "shortName": "Class A Barber",
+      "slug": "class-a-barber",
+      "description": "Our comprehensive Class A Barber program prepares you for a rewarding career in the barbering industry. Master the art of cutting, styling, and grooming while learning the business skills needed to succeed.",
+      "longDescription": "The Class A Barber program at Mystros Barber Academy is designed to transform aspiring barbers into skilled professionals. Through 1,000 hours of intensive training, students learn classic and contemporary cutting techniques, razor work, facial hair design, and client consultation skills. Our curriculum combines hands-on practice with theory education, ensuring graduates are prepared to pass the Texas state licensing exam and excel in their careers.",
+      "hours": {
+        "total": 1000,
+        "theory": 300,
+        "practical": 700
+      },
+      "tuition": {
+        "amount": 15500,
+        "registrationFee": 100,
+        "booksAndSupplies": 1200,
+        "total": 16800,
+        "currency": "USD"
+      },
+      "schedules": [
+        {
+          "id": "full-time-day",
+          "name": "Full-Time Day",
+          "description": "Tuesday - Saturday, 9:00 AM - 5:00 PM",
+          "hoursPerWeek": 40,
+          "daysPerWeek": 5,
+          "startTime": "09:00",
+          "endTime": "17:00",
+          "expectedWeeks": 25,
+          "expectedMonths": 6
+        },
+        {
+          "id": "part-time-evening",
+          "name": "Part-Time Evening",
+          "description": "Monday - Friday, 5:30 PM - 9:30 PM",
+          "hoursPerWeek": 20,
+          "daysPerWeek": 5,
+          "startTime": "17:30",
+          "endTime": "21:30",
+          "expectedWeeks": 50,
+          "expectedMonths": 12
+        }
+      ],
+      "requirements": {
+        "minimumAge": 17,
+        "education": "High School Diploma or GED",
+        "documents": [
+          "Valid Government-Issued ID",
+          "High School Diploma or GED Certificate",
+          "Social Security Card"
+        ]
+      },
+      "curriculum": [
+        {
+          "module": "Fundamentals of Barbering",
+          "hours": 150,
+          "topics": [
+            "History of Barbering",
+            "Sanitation & Sterilization",
+            "Bacteriology & Infection Control",
+            "Tools & Equipment",
+            "Professional Ethics"
+          ]
+        },
+        {
+          "module": "Hair Cutting Techniques",
+          "hours": 300,
+          "topics": [
+            "Scissor Techniques",
+            "Clipper Cutting",
+            "Razor Cutting",
+            "Fades & Tapers",
+            "Textured Cuts",
+            "Classic & Contemporary Styles"
+          ]
+        },
+        {
+          "module": "Shaving & Facial Hair",
+          "hours": 150,
+          "topics": [
+            "Straight Razor Shaving",
+            "Beard Trimming & Design",
+            "Facial Treatments",
+            "Hot Towel Service"
+          ]
+        },
+        {
+          "module": "Hair & Scalp Treatments",
+          "hours": 100,
+          "topics": [
+            "Shampooing Techniques",
+            "Scalp Massage",
+            "Hair & Scalp Analysis",
+            "Treatment Applications"
+          ]
+        },
+        {
+          "module": "Chemical Services",
+          "hours": 100,
+          "topics": [
+            "Hair Coloring Basics",
+            "Chemical Relaxers",
+            "Texturizing Services",
+            "Safety Protocols"
+          ]
+        },
+        {
+          "module": "Business & Career Development",
+          "hours": 100,
+          "topics": [
+            "Client Consultation",
+            "Retail Sales",
+            "Booth Rental vs Employment",
+            "Building Clientele",
+            "State Board Preparation"
+          ]
+        },
+        {
+          "module": "Practical Application",
+          "hours": 100,
+          "topics": [
+            "Live Client Services",
+            "Speed & Efficiency",
+            "Portfolio Development"
+          ]
+        }
+      ],
+      "outcomes": [
+        "Texas Class A Barber License eligibility",
+        "Job placement assistance",
+        "Business development skills",
+        "Lifetime career services access"
+      ],
+      "careerPaths": [
+        "Licensed Barber",
+        "Barber Shop Owner",
+        "Platform Artist",
+        "Educator",
+        "Product Representative"
+      ],
+      "financialAid": {
+        "eligible": true,
+        "fafsaCode": "042609",
+        "types": [
+          "Federal Pell Grant",
+          "Federal Direct Loans",
+          "Institutional Payment Plans"
+        ]
+      },
+      "isActive": true,
+      "isFeatured": true,
+      "sortOrder": 1
+    },
+    {
+      "id": "crossover",
+      "code": "CROSSOVER-300",
+      "name": "Cosmetology Operator to Class A Barber Crossover",
+      "shortName": "Crossover Program",
+      "slug": "crossover",
+      "description": "Already a licensed cosmetologist? Fast-track your career with our 300-hour crossover program designed specifically for cosmetology professionals seeking their Class A Barber license.",
+      "longDescription": "The Cosmetology to Class A Barber Crossover program is specifically designed for licensed cosmetology operators who want to expand their skills and obtain their Texas Class A Barber license. This accelerated 300-hour program builds on your existing cosmetology foundation, focusing on barber-specific techniques including precision clipper work, straight razor shaving, and men's hair design. Graduate ready to serve a broader clientele and increase your earning potential.",
+      "hours": {
+        "total": 300,
+        "theory": 90,
+        "practical": 210
+      },
+      "tuition": {
+        "amount": 4650,
+        "registrationFee": 100,
+        "booksAndSupplies": 600,
+        "total": 5350,
+        "currency": "USD"
+      },
+      "schedules": [
+        {
+          "id": "full-time-day",
+          "name": "Full-Time Day",
+          "description": "Tuesday - Saturday, 9:00 AM - 5:00 PM",
+          "hoursPerWeek": 40,
+          "daysPerWeek": 5,
+          "startTime": "09:00",
+          "endTime": "17:00",
+          "expectedWeeks": 8,
+          "expectedMonths": 2
+        },
+        {
+          "id": "part-time-evening",
+          "name": "Part-Time Evening",
+          "description": "Monday - Friday, 5:30 PM - 9:30 PM",
+          "hoursPerWeek": 20,
+          "daysPerWeek": 5,
+          "startTime": "17:30",
+          "endTime": "21:30",
+          "expectedWeeks": 15,
+          "expectedMonths": 4
+        }
+      ],
+      "requirements": {
+        "minimumAge": 17,
+        "education": "High School Diploma or GED",
+        "license": "Valid Texas Cosmetology Operator License",
+        "documents": [
+          "Valid Government-Issued ID",
+          "High School Diploma or GED Certificate",
+          "Social Security Card",
+          "Copy of Texas Cosmetology License"
+        ]
+      },
+      "curriculum": [
+        {
+          "module": "Barber-Specific Fundamentals",
+          "hours": 40,
+          "topics": [
+            "Texas Barber Law & Rules",
+            "Barber vs Cosmetology Scope",
+            "Sanitation Updates",
+            "Tool Maintenance"
+          ]
+        },
+        {
+          "module": "Men's Cutting Techniques",
+          "hours": 100,
+          "topics": [
+            "Advanced Clipper Techniques",
+            "Skin Fades",
+            "Razor Fading",
+            "Line-Ups & Edge Work",
+            "Classic Men's Cuts"
+          ]
+        },
+        {
+          "module": "Shaving Services",
+          "hours": 80,
+          "topics": [
+            "Straight Razor Fundamentals",
+            "Face Shaving Technique",
+            "Beard Sculpting",
+            "Hot Towel Service"
+          ]
+        },
+        {
+          "module": "Facial Hair Design",
+          "hours": 40,
+          "topics": [
+            "Beard Trimming",
+            "Mustache Design",
+            "Facial Hair Consultation"
+          ]
+        },
+        {
+          "module": "Practical & State Board Prep",
+          "hours": 40,
+          "topics": [
+            "Live Client Services",
+            "State Board Simulation",
+            "Speed Building"
+          ]
+        }
+      ],
+      "outcomes": [
+        "Texas Class A Barber License eligibility",
+        "Dual-license career flexibility",
+        "Expanded service menu",
+        "Increased earning potential"
+      ],
+      "careerPaths": [
+        "Dual-Licensed Barber/Cosmetologist",
+        "Full-Service Salon Professional",
+        "Men's Grooming Specialist"
+      ],
+      "financialAid": {
+        "eligible": true,
+        "fafsaCode": "042609",
+        "types": [
+          "Federal Pell Grant",
+          "Federal Direct Loans",
+          "Institutional Payment Plans"
+        ]
+      },
+      "isActive": true,
+      "isFeatured": true,
+      "sortOrder": 2
+    }
+  ],
+  "admissions": {
+    "minimumAge": 17,
+    "educationRequirement": "High School Diploma or GED",
+    "enrollmentSteps": [
+      {
+        "step": 1,
+        "title": "Schedule a Tour",
+        "description": "Visit our campus to meet instructors and see our facilities"
+      },
+      {
+        "step": 2,
+        "title": "Complete Application",
+        "description": "Fill out the enrollment application and submit required documents"
+      },
+      {
+        "step": 3,
+        "title": "Financial Aid (Optional)",
+        "description": "Complete FAFSA to explore financial aid options"
+      },
+      {
+        "step": 4,
+        "title": "Enrollment Agreement",
+        "description": "Review and sign enrollment agreement and school policies"
+      },
+      {
+        "step": 5,
+        "title": "Start Classes",
+        "description": "Begin your journey to becoming a licensed barber!"
+      }
+    ]
+  },
+  "fafsaInfo": {
+    "schoolCode": "042609",
+    "website": "https://studentaid.gov/h/apply-for-aid/fafsa",
+    "deadline": "Apply early - funds are limited"
+  }
+}

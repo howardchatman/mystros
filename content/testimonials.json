@@ -1,0 +1,67 @@
+{
+  "testimonials": [
+    {
+      "id": "testimonial-1",
+      "name": "Marcus Johnson",
+      "role": "Class A Barber Graduate, 2024",
+      "campus": "North Campus",
+      "quote": "Mystros gave me the skills and confidence to open my own shop. The instructors are true professionals who care about your success.",
+      "image": null,
+      "rating": 5,
+      "program": "class-a-barber",
+      "graduationYear": 2024,
+      "currentPosition": "Owner, Fresh Cuts Barbershop",
+      "isFeatured": true,
+      "sortOrder": 1
+    },
+    {
+      "id": "testimonial-2",
+      "name": "Anthony Williams",
+      "role": "Class A Barber Graduate, 2023",
+      "campus": "Missouri City Campus",
+      "quote": "The hands-on training at Mystros is unmatched. From day one, you're learning real skills with real clients. Best decision I ever made.",
+      "image": null,
+      "rating": 5,
+      "program": "class-a-barber",
+      "graduationYear": 2023,
+      "currentPosition": "Lead Barber, Elite Grooming Lounge",
+      "isFeatured": true,
+      "sortOrder": 2
+    },
+    {
+      "id": "testimonial-3",
+      "name": "Jessica Martinez",
+      "role": "Crossover Program Graduate, 2024",
+      "campus": "North Campus",
+      "quote": "As a cosmetologist, the crossover program helped me expand my skills quickly. Now I can serve all my clients' needs. The flexible schedule made it possible while I kept working.",
+      "image": null,
+      "rating": 5,
+      "program": "crossover",
+      "graduationYear": 2024,
+      "currentPosition": "Dual-Licensed Stylist, Salon 360",
+      "isFeatured": true,
+      "sortOrder": 3
+    },
+    {
+      "id": "testimonial-4",
+      "name": "DeShawn Carter",
+      "role": "Class A Barber Graduate, 2023",
+      "campus": "North Campus",
+      "quote": "Eros and the team at Mystros believe in second chances. They helped me turn my life around and build a real career. Forever grateful.",
+      "image": null,
+      "rating": 5,
+      "program": "class-a-barber",
+      "graduationYear": 2023,
+      "currentPosition": "Barber & Mentor",
+      "isFeatured": true,
+      "sortOrder": 4
+    }
+  ],
+  "stats": {
+    "graduationRate": 92,
+    "jobPlacementRate": 88,
+    "studentSatisfaction": 96,
+    "yearsInOperation": 10,
+    "totalGraduates": 500
+  }
+}
