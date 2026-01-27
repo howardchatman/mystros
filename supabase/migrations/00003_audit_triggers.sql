@@ -34,8 +34,8 @@ BEGIN
     v_new_data := NULL;
 
     -- Try to get campus_id from old record
-    IF OLD ? 'campus_id' THEN
-      v_campus_id := (OLD->>'campus_id')::UUID;
+    IF v_old_data ? 'campus_id' THEN
+      v_campus_id := (v_old_data->>'campus_id')::UUID;
     END IF;
 
   ELSIF TG_OP = 'UPDATE' THEN
@@ -52,10 +52,10 @@ BEGIN
     ) changed;
 
     -- Try to get campus_id from new record
-    IF NEW ? 'campus_id' THEN
-      v_campus_id := (NEW->>'campus_id')::UUID;
-    ELSIF OLD ? 'campus_id' THEN
-      v_campus_id := (OLD->>'campus_id')::UUID;
+    IF v_new_data ? 'campus_id' THEN
+      v_campus_id := (v_new_data->>'campus_id')::UUID;
+    ELSIF v_old_data ? 'campus_id' THEN
+      v_campus_id := (v_old_data->>'campus_id')::UUID;
     END IF;
 
   ELSIF TG_OP = 'INSERT' THEN
@@ -63,8 +63,8 @@ BEGIN
     v_new_data := to_jsonb(NEW);
 
     -- Try to get campus_id from new record
-    IF NEW ? 'campus_id' THEN
-      v_campus_id := (NEW->>'campus_id')::UUID;
+    IF v_new_data ? 'campus_id' THEN
+      v_campus_id := (v_new_data->>'campus_id')::UUID;
     END IF;
   END IF;
 
