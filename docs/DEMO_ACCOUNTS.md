@@ -10,7 +10,7 @@ These demo accounts are pre-configured for testing different role-based access l
 
 | Email | Name | Role | Campus Access | Password |
 |-------|------|------|---------------|----------|
-| `eros@demo.com` | Eros Shaw | **SuperAdmin** (Owner) | North + Missouri City | `demo1234` |
+| `eros@chatmanconcierge.com` | Eros Shaw | **SuperAdmin** (Owner) | North + Missouri City | `demo1234` |
 | `steve@demo.com` | Steve Farrell | **Campus Admin** (Director) | Missouri City only | `demo1234` |
 | `teacher@demo.com` | Demo Teacher | **Instructor** | North Campus | `demo1234` |
 | `compliance@demo.com` | Demo Auditor | **Auditor** (Read-only) | Both Campuses | `demo1234` |
@@ -21,7 +21,7 @@ These demo accounts are pre-configured for testing different role-based access l
 
 ## Role Permissions Summary
 
-### SuperAdmin (`eros@demo.com`)
+### SuperAdmin (`eros@chatmanconcierge.com`)
 - Full access to all features across all campuses
 - User management and role assignments
 - System settings and program configuration
@@ -76,7 +76,7 @@ These demo accounts are pre-configured for testing different role-based access l
 3. Use these specific UUIDs (important for the seed data to work):
 
 ```
-eros@demo.com:       d1000000-0000-0000-0000-000000000001
+eros@chatmanconcierge.com: d1000000-0000-0000-0000-000000000001
 steve@demo.com:      d1000000-0000-0000-0000-000000000002
 teacher@demo.com:    d1000000-0000-0000-0000-000000000003
 compliance@demo.com: d1000000-0000-0000-0000-000000000004
@@ -123,7 +123,7 @@ The `student@demo.com` account has pre-populated data:
 ## Testing Scenarios
 
 ### Test Role-Based Access
-1. Login as `eros@demo.com` - should see all campuses
+1. Login as `eros@chatmanconcierge.com` - should see all campuses
 2. Login as `steve@demo.com` - should only see Missouri City data
 3. Login as `compliance@demo.com` - should see all data but no edit buttons
 

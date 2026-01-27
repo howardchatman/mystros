@@ -28,7 +28,7 @@ VALUES
   -- Eros Shaw - Owner/SuperAdmin (both campuses)
   (
     'd1000000-0000-0000-0000-000000000001',
-    'eros@demo.com',
+    'eros@chatmanconcierge.com',
     'Eros',
     'Shaw',
     '832-286-4248',
