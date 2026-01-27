@@ -127,7 +127,7 @@ export function StudentSidebar({ user }: StudentSidebarProps) {
           <div className="p-4 border-t border-border space-y-2">
             <div className="flex items-center justify-between px-3 py-2">
               <span className="text-sm text-muted-foreground">Theme</span>
-              <ThemeToggle />
+              <ThemeToggle showLabel />
             </div>
             <button
               onClick={handleSignOut}

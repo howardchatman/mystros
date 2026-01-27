@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu, X, Phone, ChevronDown, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const navLinks = [
   { label: "Programs", href: "/programs", hasDropdown: true },
@@ -81,7 +82,7 @@ export function Header() {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
           isScrolled
-            ? "bg-brand-bg/80 backdrop-blur-xl border-b border-white/10 shadow-lg"
+            ? "bg-background/80 backdrop-blur-xl border-b border-border shadow-lg"
             : "bg-transparent"
         )}
       >
@@ -102,10 +103,10 @@ export function Header() {
                 />
               </div>
               <div className="hidden sm:block">
-                <span className="font-display font-bold text-brand-text text-sm md:text-base">
+                <span className="font-display font-bold text-foreground text-sm md:text-base">
                   Mystros
                 </span>
-                <span className="block text-[10px] md:text-xs text-brand-muted -mt-0.5">
+                <span className="block text-[10px] md:text-xs text-muted-foreground -mt-0.5">
                   Barber Academy
                 </span>
               </div>
@@ -124,7 +125,7 @@ export function Header() {
                     href={link.href}
                     className={cn(
                       "flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-all",
-                      "text-brand-muted hover:text-brand-text hover:bg-white/5"
+                      "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                     )}
                   >
                     {link.label}
@@ -141,25 +142,25 @@ export function Header() {
                   {/* Dropdown Menu */}
                   {link.hasDropdown && activeDropdown === link.label && (
                     <div className="absolute top-full left-0 pt-2 w-72">
-                      <div className="rounded-xl border border-white/10 bg-brand-elevated/95 backdrop-blur-xl p-2 shadow-xl animate-fade-in">
+                      <div className="rounded-xl border border-border bg-popover/95 backdrop-blur-xl p-2 shadow-xl animate-fade-in">
                         {programLinks.map((program) => (
                           <Link
                             key={program.href}
                             href={program.href}
-                            className="flex flex-col gap-0.5 rounded-lg px-4 py-3 transition-all hover:bg-white/5"
+                            className="flex flex-col gap-0.5 rounded-lg px-4 py-3 transition-all hover:bg-muted/50"
                           >
-                            <span className="font-medium text-brand-text">
+                            <span className="font-medium text-foreground">
                               {program.label}
                             </span>
-                            <span className="text-xs text-brand-muted">
+                            <span className="text-xs text-muted-foreground">
                               {program.description}
                             </span>
                           </Link>
                         ))}
-                        <div className="mt-2 pt-2 border-t border-white/10">
+                        <div className="mt-2 pt-2 border-t border-border">
                           <Link
                             href="/programs"
-                            className="flex items-center gap-2 px-4 py-2 text-sm text-brand-accent hover:underline"
+                            className="flex items-center gap-2 px-4 py-2 text-sm text-primary hover:underline"
                           >
                             View all programs
                             <ArrowRight className="h-3 w-3" />
@@ -174,22 +175,23 @@ export function Header() {
 
             {/* Desktop CTA */}
             <div className="hidden lg:flex items-center gap-3">
+              <ThemeToggle />
               <a
                 href="tel:8322864248"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-brand-muted hover:text-brand-text transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 <Phone className="h-4 w-4" />
                 <span className="hidden xl:inline">(832) 286-4248</span>
               </a>
               <Link
                 href="/student-portal"
-                className="px-4 py-2 rounded-lg text-sm font-medium text-brand-muted hover:text-brand-text hover:bg-white/5 transition-all"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
               >
                 Student Login
               </Link>
               <Link
                 href="/apply"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-brand-accent text-white hover:bg-brand-accent2 transition-all hover:shadow-glow-sm"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all hover:shadow-lg"
               >
                 Apply Now
                 <ArrowRight className="h-4 w-4" />
@@ -199,7 +201,7 @@ export function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden flex items-center justify-center h-10 w-10 rounded-lg bg-white/5 text-brand-text hover:bg-white/10 transition-colors"
+              className="lg:hidden flex items-center justify-center h-10 w-10 rounded-lg bg-muted/50 text-foreground hover:bg-muted transition-colors"
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
               {isMobileMenuOpen ? (
@@ -215,7 +217,7 @@ export function Header() {
       {/* Mobile Menu Overlay */}
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-brand-bg/95 backdrop-blur-xl lg:hidden transition-all duration-300",
+          "fixed inset-0 z-40 bg-background/95 backdrop-blur-xl lg:hidden transition-all duration-300",
           isMobileMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -236,12 +238,12 @@ export function Header() {
                 <Link
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between px-4 py-4 rounded-xl text-lg font-medium text-brand-text hover:bg-white/5 transition-colors"
+                  className="flex items-center justify-between px-4 py-4 rounded-xl text-lg font-medium text-foreground hover:bg-muted/50 transition-colors"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   {link.label}
                   {link.hasDropdown && (
-                    <ChevronDown className="h-5 w-5 text-brand-muted" />
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" />
                   )}
                 </Link>
                 {link.hasDropdown && (
@@ -251,7 +253,7 @@ export function Header() {
                         key={program.href}
                         href={program.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex flex-col px-4 py-3 rounded-lg text-brand-muted hover:text-brand-text hover:bg-white/5 transition-colors"
+                        className="flex flex-col px-4 py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
                       >
                         <span className="text-sm font-medium">{program.label}</span>
                         <span className="text-xs">{program.description}</span>
@@ -264,10 +266,15 @@ export function Header() {
           </nav>
 
           {/* Mobile CTA Buttons */}
-          <div className="space-y-3 pt-6 border-t border-white/10">
+          <div className="space-y-3 pt-6 border-t border-border">
+            {/* Theme Toggle for Mobile */}
+            <div className="flex items-center justify-between px-4 py-3 rounded-xl border border-border">
+              <span className="text-foreground font-medium">Theme</span>
+              <ThemeToggle showLabel />
+            </div>
             <a
               href="tel:8322864248"
-              className="flex items-center justify-center gap-2 w-full py-4 rounded-xl border border-white/20 text-brand-text font-medium hover:bg-white/5 transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-4 rounded-xl border border-border text-foreground font-medium hover:bg-muted/50 transition-colors"
             >
               <Phone className="h-5 w-5" />
               (832) 286-4248
@@ -275,14 +282,14 @@ export function Header() {
             <Link
               href="/student-portal"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-center w-full py-4 rounded-xl border border-white/20 text-brand-text font-medium hover:bg-white/5 transition-colors"
+              className="flex items-center justify-center w-full py-4 rounded-xl border border-border text-foreground font-medium hover:bg-muted/50 transition-colors"
             >
               Student Login
             </Link>
             <Link
               href="/apply"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-brand-accent text-white font-semibold hover:bg-brand-accent2 transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
             >
               Apply Now
               <ArrowRight className="h-5 w-5" />

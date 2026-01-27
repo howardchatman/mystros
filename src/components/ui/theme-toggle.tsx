@@ -62,8 +62,8 @@ export function ThemeToggle({ className, showLabel = false }: ThemeToggleProps) 
       onClick={cycleTheme}
       className={cn(
         "inline-flex items-center justify-center gap-2 rounded-lg p-2.5",
-        "bg-muted/50 hover:bg-muted",
-        "text-muted-foreground hover:text-foreground",
+        "bg-primary/10 hover:bg-primary/20 border border-primary/20",
+        "text-foreground hover:text-primary",
         "transition-colors duration-200",
         "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background",
         className
