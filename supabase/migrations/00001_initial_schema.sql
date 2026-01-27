@@ -9,115 +9,91 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- ============================================================================
--- ENUMS
+-- ENUMS (with IF NOT EXISTS handling)
 -- ============================================================================
 
 -- User roles
-CREATE TYPE user_role AS ENUM (
-  'superadmin',
-  'campus_admin',
-  'admissions',
-  'financial_aid',
-  'instructor',
-  'registrar',
-  'student',
-  'auditor'
-);
+DO $$ BEGIN
+  CREATE TYPE user_role AS ENUM (
+    'superadmin', 'campus_admin', 'admissions', 'financial_aid',
+    'instructor', 'registrar', 'student', 'auditor'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Student lifecycle stages
-CREATE TYPE student_status AS ENUM (
-  'lead',
-  'applicant',
-  'accepted',
-  'enrolled',
-  'active',
-  'graduated',
-  'withdrawn',
-  'loa',          -- Leave of Absence
-  'lost',         -- Lead lost
-  'denied',       -- Application denied
-  'declined',     -- Offer declined
-  'no_show'       -- Never started
-);
+DO $$ BEGIN
+  CREATE TYPE student_status AS ENUM (
+    'lead', 'applicant', 'accepted', 'enrolled', 'active',
+    'graduated', 'withdrawn', 'loa', 'lost', 'denied', 'declined', 'no_show'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Document status
-CREATE TYPE document_status AS ENUM (
-  'pending',
-  'uploaded',
-  'under_review',
-  'approved',
-  'rejected',
-  'expired'
-);
+DO $$ BEGIN
+  CREATE TYPE document_status AS ENUM (
+    'pending', 'uploaded', 'under_review', 'approved', 'rejected', 'expired'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- E-signature status
-CREATE TYPE signature_status AS ENUM (
-  'pending',
-  'sent',
-  'viewed',
-  'signed',
-  'declined',
-  'voided'
-);
+DO $$ BEGIN
+  CREATE TYPE signature_status AS ENUM (
+    'pending', 'sent', 'viewed', 'signed', 'declined', 'voided'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Financial aid status
-CREATE TYPE aid_status AS ENUM (
-  'not_started',
-  'fafsa_submitted',
-  'isir_received',
-  'verification_required',
-  'verification_complete',
-  'packaged',
-  'accepted',
-  'declined'
-);
+DO $$ BEGIN
+  CREATE TYPE aid_status AS ENUM (
+    'not_started', 'fafsa_submitted', 'isir_received', 'verification_required',
+    'verification_complete', 'packaged', 'accepted', 'declined'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Disbursement status
-CREATE TYPE disbursement_status AS ENUM (
-  'scheduled',
-  'pending_release',
-  'released',
-  'posted',
-  'cancelled',
-  'returned'
-);
+DO $$ BEGIN
+  CREATE TYPE disbursement_status AS ENUM (
+    'scheduled', 'pending_release', 'released', 'posted', 'cancelled', 'returned'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- SAP status
-CREATE TYPE sap_status AS ENUM (
-  'satisfactory',
-  'warning',
-  'probation',
-  'suspension',
-  'appeal_pending',
-  'appeal_approved',
-  'appeal_denied'
-);
+DO $$ BEGIN
+  CREATE TYPE sap_status AS ENUM (
+    'satisfactory', 'warning', 'probation', 'suspension',
+    'appeal_pending', 'appeal_approved', 'appeal_denied'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Payment status
-CREATE TYPE payment_status AS ENUM (
-  'pending',
-  'processing',
-  'completed',
-  'failed',
-  'refunded',
-  'cancelled'
-);
+DO $$ BEGIN
+  CREATE TYPE payment_status AS ENUM (
+    'pending', 'processing', 'completed', 'failed', 'refunded', 'cancelled'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Attendance status
-CREATE TYPE attendance_status AS ENUM (
-  'present',
-  'absent',
-  'tardy',
-  'excused',
-  'pending_approval'
-);
+DO $$ BEGIN
+  CREATE TYPE attendance_status AS ENUM (
+    'present', 'absent', 'tardy', 'excused', 'pending_approval'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- ============================================================================
 -- CORE TABLES
 -- ============================================================================
 
 -- Campuses
-CREATE TABLE campuses (
+CREATE TABLE IF NOT EXISTS campuses (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR(255) NOT NULL,
   code VARCHAR(20) NOT NULL UNIQUE,
@@ -134,7 +110,7 @@ CREATE TABLE campuses (
 );
 
 -- Programs
-CREATE TABLE programs (
+CREATE TABLE IF NOT EXISTS programs (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR(255) NOT NULL,
   code VARCHAR(50) NOT NULL UNIQUE,
@@ -152,7 +128,7 @@ CREATE TABLE programs (
 );
 
 -- Program schedules (full-time, part-time options)
-CREATE TABLE program_schedules (
+CREATE TABLE IF NOT EXISTS program_schedules (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   program_id UUID NOT NULL REFERENCES programs(id) ON DELETE CASCADE,
   name VARCHAR(100) NOT NULL,  -- e.g., "Full-Time Day", "Part-Time Evening"
@@ -170,7 +146,7 @@ CREATE TABLE program_schedules (
 -- ============================================================================
 
 -- User profiles (extends Supabase auth.users)
-CREATE TABLE user_profiles (
+CREATE TABLE IF NOT EXISTS user_profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email VARCHAR(255) NOT NULL,
   first_name VARCHAR(100) NOT NULL,
@@ -185,7 +161,7 @@ CREATE TABLE user_profiles (
 );
 
 -- User campus assignments (staff can be assigned to one or both campuses)
-CREATE TABLE user_campus_assignments (
+CREATE TABLE IF NOT EXISTS user_campus_assignments (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES user_profiles(id) ON DELETE CASCADE,
   campus_id UUID NOT NULL REFERENCES campuses(id) ON DELETE CASCADE,
@@ -200,7 +176,7 @@ CREATE TABLE user_campus_assignments (
 -- ============================================================================
 
 -- Leads (prospective students)
-CREATE TABLE leads (
+CREATE TABLE IF NOT EXISTS leads (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 
   -- Contact info
@@ -238,7 +214,7 @@ CREATE TABLE leads (
 );
 
 -- Lead activity log
-CREATE TABLE lead_activities (
+CREATE TABLE IF NOT EXISTS lead_activities (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   lead_id UUID NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
   activity_type VARCHAR(50) NOT NULL,  -- call, email, tour, note, status_change
@@ -248,7 +224,7 @@ CREATE TABLE lead_activities (
 );
 
 -- Applications
-CREATE TABLE applications (
+CREATE TABLE IF NOT EXISTS applications (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   lead_id UUID REFERENCES leads(id),
   user_id UUID REFERENCES user_profiles(id),  -- Linked after account creation
@@ -313,7 +289,7 @@ CREATE TABLE applications (
 -- ============================================================================
 
 -- Document types configuration
-CREATE TABLE document_types (
+CREATE TABLE IF NOT EXISTS document_types (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR(255) NOT NULL,
   code VARCHAR(50) NOT NULL UNIQUE,
@@ -330,7 +306,7 @@ CREATE TABLE document_types (
 );
 
 -- Student documents
-CREATE TABLE documents (
+CREATE TABLE IF NOT EXISTS documents (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL,  -- References students table
   application_id UUID REFERENCES applications(id),
@@ -362,7 +338,7 @@ CREATE TABLE documents (
 );
 
 -- E-signature envelopes
-CREATE TABLE signature_envelopes (
+CREATE TABLE IF NOT EXISTS signature_envelopes (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL,
   application_id UUID REFERENCES applications(id),
@@ -387,7 +363,7 @@ CREATE TABLE signature_envelopes (
 );
 
 -- E-signature records (for audit)
-CREATE TABLE signature_records (
+CREATE TABLE IF NOT EXISTS signature_records (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   envelope_id UUID NOT NULL REFERENCES signature_envelopes(id) ON DELETE CASCADE,
 
@@ -416,7 +392,7 @@ CREATE TABLE signature_records (
 -- ============================================================================
 
 -- Students (enrolled/active students)
-CREATE TABLE students (
+CREATE TABLE IF NOT EXISTS students (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES user_profiles(id),
   application_id UUID REFERENCES applications(id),
@@ -469,7 +445,7 @@ CREATE TABLE students (
 -- ============================================================================
 
 -- Daily attendance records
-CREATE TABLE attendance_records (
+CREATE TABLE IF NOT EXISTS attendance_records (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
   campus_id UUID NOT NULL REFERENCES campuses(id),
@@ -505,7 +481,7 @@ CREATE TABLE attendance_records (
 );
 
 -- Attendance correction requests
-CREATE TABLE attendance_corrections (
+CREATE TABLE IF NOT EXISTS attendance_corrections (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   attendance_record_id UUID NOT NULL REFERENCES attendance_records(id),
   student_id UUID NOT NULL REFERENCES students(id),
@@ -531,7 +507,7 @@ CREATE TABLE attendance_corrections (
 -- ============================================================================
 
 -- Financial aid applications (per student)
-CREATE TABLE financial_aid_records (
+CREATE TABLE IF NOT EXISTS financial_aid_records (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
   academic_year VARCHAR(9) NOT NULL,  -- e.g., "2025-2026"
@@ -570,7 +546,7 @@ CREATE TABLE financial_aid_records (
 );
 
 -- Financial aid awards
-CREATE TABLE financial_aid_awards (
+CREATE TABLE IF NOT EXISTS financial_aid_awards (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   financial_aid_record_id UUID NOT NULL REFERENCES financial_aid_records(id) ON DELETE CASCADE,
 
@@ -596,7 +572,7 @@ CREATE TABLE financial_aid_awards (
 );
 
 -- Disbursements
-CREATE TABLE disbursements (
+CREATE TABLE IF NOT EXISTS disbursements (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   financial_aid_award_id UUID NOT NULL REFERENCES financial_aid_awards(id) ON DELETE CASCADE,
   student_id UUID NOT NULL REFERENCES students(id),
@@ -630,7 +606,7 @@ CREATE TABLE disbursements (
 );
 
 -- SAP evaluations
-CREATE TABLE sap_evaluations (
+CREATE TABLE IF NOT EXISTS sap_evaluations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
 
@@ -672,7 +648,7 @@ CREATE TABLE sap_evaluations (
 -- ============================================================================
 
 -- Student accounts (ledger header)
-CREATE TABLE student_accounts (
+CREATE TABLE IF NOT EXISTS student_accounts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL UNIQUE REFERENCES students(id) ON DELETE CASCADE,
 
@@ -691,7 +667,7 @@ CREATE TABLE student_accounts (
 );
 
 -- Charges (tuition, fees, etc.)
-CREATE TABLE charges (
+CREATE TABLE IF NOT EXISTS charges (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_account_id UUID NOT NULL REFERENCES student_accounts(id) ON DELETE CASCADE,
   student_id UUID NOT NULL REFERENCES students(id),
@@ -718,7 +694,7 @@ CREATE TABLE charges (
 );
 
 -- Payments
-CREATE TABLE payments (
+CREATE TABLE IF NOT EXISTS payments (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_account_id UUID NOT NULL REFERENCES student_accounts(id) ON DELETE CASCADE,
   student_id UUID NOT NULL REFERENCES students(id),
@@ -749,7 +725,7 @@ CREATE TABLE payments (
 );
 
 -- Payment plans
-CREATE TABLE payment_plans (
+CREATE TABLE IF NOT EXISTS payment_plans (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL REFERENCES students(id),
   student_account_id UUID NOT NULL REFERENCES student_accounts(id),
@@ -773,7 +749,7 @@ CREATE TABLE payment_plans (
 );
 
 -- Payment plan installments
-CREATE TABLE payment_plan_installments (
+CREATE TABLE IF NOT EXISTS payment_plan_installments (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   payment_plan_id UUID NOT NULL REFERENCES payment_plans(id) ON DELETE CASCADE,
 
@@ -797,7 +773,7 @@ CREATE TABLE payment_plan_installments (
 -- ============================================================================
 
 -- Withdrawal records
-CREATE TABLE withdrawals (
+CREATE TABLE IF NOT EXISTS withdrawals (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL REFERENCES students(id),
 
@@ -848,7 +824,7 @@ CREATE TABLE withdrawals (
 );
 
 -- R2T4 return schedule
-CREATE TABLE r2t4_returns (
+CREATE TABLE IF NOT EXISTS r2t4_returns (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   withdrawal_id UUID NOT NULL REFERENCES withdrawals(id) ON DELETE CASCADE,
 
@@ -871,7 +847,7 @@ CREATE TABLE r2t4_returns (
 -- ============================================================================
 
 -- Immutable audit log
-CREATE TABLE audit_log (
+CREATE TABLE IF NOT EXISTS audit_log (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 
   -- What changed
@@ -900,11 +876,17 @@ CREATE TABLE audit_log (
 
 -- Make audit log immutable
 ALTER TABLE audit_log SET (autovacuum_enabled = false);
-CREATE RULE audit_log_no_update AS ON UPDATE TO audit_log DO INSTEAD NOTHING;
-CREATE RULE audit_log_no_delete AS ON DELETE TO audit_log DO INSTEAD NOTHING;
+DO $$ BEGIN
+  CREATE RULE audit_log_no_update AS ON UPDATE TO audit_log DO INSTEAD NOTHING;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+DO $$ BEGIN
+  CREATE RULE audit_log_no_delete AS ON DELETE TO audit_log DO INSTEAD NOTHING;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 -- Compliance checklist items (per student)
-CREATE TABLE compliance_checklist_items (
+CREATE TABLE IF NOT EXISTS compliance_checklist_items (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
 
@@ -935,7 +917,7 @@ CREATE TABLE compliance_checklist_items (
 );
 
 -- Session log (for security audit)
-CREATE TABLE session_log (
+CREATE TABLE IF NOT EXISTS session_log (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES user_profiles(id),
 
@@ -953,7 +935,7 @@ CREATE TABLE session_log (
 -- ============================================================================
 
 -- Task queue (for staff follow-ups)
-CREATE TABLE tasks (
+CREATE TABLE IF NOT EXISTS tasks (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 
   -- Task info
@@ -984,7 +966,7 @@ CREATE TABLE tasks (
 );
 
 -- Notification templates
-CREATE TABLE notification_templates (
+CREATE TABLE IF NOT EXISTS notification_templates (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 
   name VARCHAR(100) NOT NULL,
@@ -1002,7 +984,7 @@ CREATE TABLE notification_templates (
 );
 
 -- Notification log
-CREATE TABLE notifications (
+CREATE TABLE IF NOT EXISTS notifications (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 
   template_id UUID REFERENCES notification_templates(id),
@@ -1031,64 +1013,64 @@ CREATE TABLE notifications (
 -- ============================================================================
 
 -- User profiles
-CREATE INDEX idx_user_profiles_role ON user_profiles(role);
-CREATE INDEX idx_user_profiles_email ON user_profiles(email);
+CREATE INDEX IF NOT EXISTS idx_user_profiles_role ON user_profiles(role);
+CREATE INDEX IF NOT EXISTS idx_user_profiles_email ON user_profiles(email);
 
 -- Campus assignments
-CREATE INDEX idx_user_campus_assignments_user ON user_campus_assignments(user_id);
-CREATE INDEX idx_user_campus_assignments_campus ON user_campus_assignments(campus_id);
+CREATE INDEX IF NOT EXISTS idx_user_campus_assignments_user ON user_campus_assignments(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_campus_assignments_campus ON user_campus_assignments(campus_id);
 
 -- Leads
-CREATE INDEX idx_leads_status ON leads(status);
-CREATE INDEX idx_leads_campus ON leads(campus_id);
-CREATE INDEX idx_leads_assigned ON leads(assigned_to);
-CREATE INDEX idx_leads_created ON leads(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
+CREATE INDEX IF NOT EXISTS idx_leads_campus ON leads(campus_id);
+CREATE INDEX IF NOT EXISTS idx_leads_assigned ON leads(assigned_to);
+CREATE INDEX IF NOT EXISTS idx_leads_created ON leads(created_at DESC);
 
 -- Applications
-CREATE INDEX idx_applications_status ON applications(status);
-CREATE INDEX idx_applications_campus ON applications(campus_id);
-CREATE INDEX idx_applications_user ON applications(user_id);
+CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(status);
+CREATE INDEX IF NOT EXISTS idx_applications_campus ON applications(campus_id);
+CREATE INDEX IF NOT EXISTS idx_applications_user ON applications(user_id);
 
 -- Students
-CREATE INDEX idx_students_status ON students(status);
-CREATE INDEX idx_students_campus ON students(campus_id);
-CREATE INDEX idx_students_program ON students(program_id);
-CREATE INDEX idx_students_user ON students(user_id);
-CREATE INDEX idx_students_number ON students(student_number);
+CREATE INDEX IF NOT EXISTS idx_students_status ON students(status);
+CREATE INDEX IF NOT EXISTS idx_students_campus ON students(campus_id);
+CREATE INDEX IF NOT EXISTS idx_students_program ON students(program_id);
+CREATE INDEX IF NOT EXISTS idx_students_user ON students(user_id);
+CREATE INDEX IF NOT EXISTS idx_students_number ON students(student_number);
 
 -- Attendance
-CREATE INDEX idx_attendance_student ON attendance_records(student_id);
-CREATE INDEX idx_attendance_date ON attendance_records(attendance_date);
-CREATE INDEX idx_attendance_campus_date ON attendance_records(campus_id, attendance_date);
+CREATE INDEX IF NOT EXISTS idx_attendance_student ON attendance_records(student_id);
+CREATE INDEX IF NOT EXISTS idx_attendance_date ON attendance_records(attendance_date);
+CREATE INDEX IF NOT EXISTS idx_attendance_campus_date ON attendance_records(campus_id, attendance_date);
 
 -- Financial aid
-CREATE INDEX idx_fa_records_student ON financial_aid_records(student_id);
-CREATE INDEX idx_fa_awards_record ON financial_aid_awards(financial_aid_record_id);
-CREATE INDEX idx_disbursements_student ON disbursements(student_id);
-CREATE INDEX idx_disbursements_status ON disbursements(status);
+CREATE INDEX IF NOT EXISTS idx_fa_records_student ON financial_aid_records(student_id);
+CREATE INDEX IF NOT EXISTS idx_fa_awards_record ON financial_aid_awards(financial_aid_record_id);
+CREATE INDEX IF NOT EXISTS idx_disbursements_student ON disbursements(student_id);
+CREATE INDEX IF NOT EXISTS idx_disbursements_status ON disbursements(status);
 
 -- Financials
-CREATE INDEX idx_charges_account ON charges(student_account_id);
-CREATE INDEX idx_payments_account ON payments(student_account_id);
+CREATE INDEX IF NOT EXISTS idx_charges_account ON charges(student_account_id);
+CREATE INDEX IF NOT EXISTS idx_payments_account ON payments(student_account_id);
 
 -- Audit log
-CREATE INDEX idx_audit_log_table_record ON audit_log(table_name, record_id);
-CREATE INDEX idx_audit_log_user ON audit_log(user_id);
-CREATE INDEX idx_audit_log_created ON audit_log(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_log_table_record ON audit_log(table_name, record_id);
+CREATE INDEX IF NOT EXISTS idx_audit_log_user ON audit_log(user_id);
+CREATE INDEX IF NOT EXISTS idx_audit_log_created ON audit_log(created_at DESC);
 
 -- Documents
-CREATE INDEX idx_documents_student ON documents(student_id);
-CREATE INDEX idx_documents_type ON documents(document_type_id);
-CREATE INDEX idx_documents_status ON documents(status);
+CREATE INDEX IF NOT EXISTS idx_documents_student ON documents(student_id);
+CREATE INDEX IF NOT EXISTS idx_documents_type ON documents(document_type_id);
+CREATE INDEX IF NOT EXISTS idx_documents_status ON documents(status);
 
 -- Tasks
-CREATE INDEX idx_tasks_assigned ON tasks(assigned_to);
-CREATE INDEX idx_tasks_status ON tasks(status);
-CREATE INDEX idx_tasks_due ON tasks(due_date);
+CREATE INDEX IF NOT EXISTS idx_tasks_assigned ON tasks(assigned_to);
+CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status);
+CREATE INDEX IF NOT EXISTS idx_tasks_due ON tasks(due_date);
 
 -- Compliance
-CREATE INDEX idx_compliance_student ON compliance_checklist_items(student_id);
-CREATE INDEX idx_compliance_incomplete ON compliance_checklist_items(student_id) WHERE NOT is_complete;
+CREATE INDEX IF NOT EXISTS idx_compliance_student ON compliance_checklist_items(student_id);
+CREATE INDEX IF NOT EXISTS idx_compliance_incomplete ON compliance_checklist_items(student_id) WHERE NOT is_complete;
 
 -- ============================================================================
 -- TRIGGERS FOR UPDATED_AT
@@ -1102,21 +1084,38 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Apply to all tables with updated_at
+-- Apply to all tables with updated_at (drop if exists first)
+DROP TRIGGER IF EXISTS update_campuses_updated_at ON campuses;
 CREATE TRIGGER update_campuses_updated_at BEFORE UPDATE ON campuses FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_programs_updated_at ON programs;
 CREATE TRIGGER update_programs_updated_at BEFORE UPDATE ON programs FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_user_profiles_updated_at ON user_profiles;
 CREATE TRIGGER update_user_profiles_updated_at BEFORE UPDATE ON user_profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_leads_updated_at ON leads;
 CREATE TRIGGER update_leads_updated_at BEFORE UPDATE ON leads FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_applications_updated_at ON applications;
 CREATE TRIGGER update_applications_updated_at BEFORE UPDATE ON applications FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_documents_updated_at ON documents;
 CREATE TRIGGER update_documents_updated_at BEFORE UPDATE ON documents FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_signature_envelopes_updated_at ON signature_envelopes;
 CREATE TRIGGER update_signature_envelopes_updated_at BEFORE UPDATE ON signature_envelopes FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_students_updated_at ON students;
 CREATE TRIGGER update_students_updated_at BEFORE UPDATE ON students FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_attendance_records_updated_at ON attendance_records;
 CREATE TRIGGER update_attendance_records_updated_at BEFORE UPDATE ON attendance_records FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_financial_aid_records_updated_at ON financial_aid_records;
 CREATE TRIGGER update_financial_aid_records_updated_at BEFORE UPDATE ON financial_aid_records FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_financial_aid_awards_updated_at ON financial_aid_awards;
 CREATE TRIGGER update_financial_aid_awards_updated_at BEFORE UPDATE ON financial_aid_awards FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_disbursements_updated_at ON disbursements;
 CREATE TRIGGER update_disbursements_updated_at BEFORE UPDATE ON disbursements FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_student_accounts_updated_at ON student_accounts;
 CREATE TRIGGER update_student_accounts_updated_at BEFORE UPDATE ON student_accounts FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_payment_plan_installments_updated_at ON payment_plan_installments;
 CREATE TRIGGER update_payment_plan_installments_updated_at BEFORE UPDATE ON payment_plan_installments FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_withdrawals_updated_at ON withdrawals;
 CREATE TRIGGER update_withdrawals_updated_at BEFORE UPDATE ON withdrawals FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_compliance_checklist_items_updated_at ON compliance_checklist_items;
 CREATE TRIGGER update_compliance_checklist_items_updated_at BEFORE UPDATE ON compliance_checklist_items FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS update_tasks_updated_at ON tasks;
 CREATE TRIGGER update_tasks_updated_at BEFORE UPDATE ON tasks FOR EACH ROW EXECUTE FUNCTION update_updated_at();

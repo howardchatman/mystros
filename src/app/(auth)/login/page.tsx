@@ -20,7 +20,7 @@ export default function LoginPage() {
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-display">Welcome Back</CardTitle>
         <CardDescription>
-          Sign in to access your student portal
+          Sign in to your Mystros account
         </CardDescription>
       </CardHeader>
       <CardContent>

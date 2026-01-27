@@ -124,9 +124,11 @@ export function LoginForm() {
       {/* Demo accounts hint */}
       <div className="mt-4 p-3 rounded-lg bg-brand-primary/20 border border-brand-accent/20">
         <p className="text-xs text-brand-muted text-center">
-          <span className="font-medium text-brand-ice">Demo accounts:</span>
+          <span className="font-medium text-brand-ice">Demo accounts (password: Demo123!)</span>
           <br />
-          student@demo.com | admin@demo.com
+          <span className="text-brand-ice/80">Student:</span> test123@demo.com
+          <br />
+          <span className="text-brand-ice/80">Admin:</span> admin@demo.com
         </p>
       </div>
     </form>
