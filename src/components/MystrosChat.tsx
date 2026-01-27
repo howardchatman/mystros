@@ -109,7 +109,7 @@ export default function MystrosChat() {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         sender: "assistant",
-        text: "Connection issue on my end. Please call us at (713) 555-0123 for immediate assistance.",
+        text: "Connection issue on my end. Please call us at (713) 999-2904 for immediate assistance.",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -168,7 +168,7 @@ export default function MystrosChat() {
       const errorMessage: Message = {
         id: Date.now().toString(),
         sender: "assistant",
-        text: "Connection issue. Try again or call (713) 555-0123 directly.",
+        text: "Connection issue. Try again or call (713) 999-2904 directly.",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -214,7 +214,7 @@ export default function MystrosChat() {
       const errorMessage: Message = {
         id: Date.now().toString(),
         sender: "assistant",
-        text: "Couldn't connect right now. Please call (713) 555-0123 for immediate assistance.",
+        text: "Couldn't connect right now. Please call (713) 999-2904 for immediate assistance.",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);

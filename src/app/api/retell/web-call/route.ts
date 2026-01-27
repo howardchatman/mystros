@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "Voice calling is not available. Please contact us at (713) 555-0123 for immediate assistance.",
+          error: "Voice calling is not available. Please contact us at (713) 999-2904 for immediate assistance.",
         },
         { status: 503 }
       );
