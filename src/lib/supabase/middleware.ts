@@ -30,7 +30,13 @@ export async function createClient(request: NextRequest) {
             },
           });
           cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
+            response.cookies.set(name, value, {
+              ...options,
+              path: "/",
+              secure: process.env.NODE_ENV === "production",
+              sameSite: "lax",
+              httpOnly: true,
+            })
           );
         },
       },

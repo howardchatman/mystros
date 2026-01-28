@@ -52,8 +52,9 @@ export function LoginForm() {
       // Redirect to the intended page or the default dashboard
       const redirectTo = redirect || result.redirectTo || "/dashboard";
       console.log("[Login] Redirecting to:", redirectTo);
-      router.push(redirectTo);
-      router.refresh();
+
+      // Use window.location for full page navigation to ensure cookies are properly read
+      window.location.href = redirectTo;
     } catch (error) {
       console.error("[Login] Error:", error);
       toast.error("An unexpected error occurred. Please try again.");

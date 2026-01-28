@@ -11,6 +11,9 @@ const publicRoutes = [
   "/register",
   "/forgot-password",
   "/reset-password",
+  "/admissions",
+  "/about",
+  "/financial-aid",
 ];
 
 // Routes that require admin roles
