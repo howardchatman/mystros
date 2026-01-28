@@ -49,7 +49,7 @@ export function LoginForm() {
 
     try {
       console.log("[Login] Creating Supabase client...");
-      console.log("[Login] URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+      console.log("[Login] URL:", process.env["NEXT_PUBLIC_SUPABASE_URL"]);
 
       const supabase = createClient();
       console.log("[Login] Client created, calling signInWithPassword...");
