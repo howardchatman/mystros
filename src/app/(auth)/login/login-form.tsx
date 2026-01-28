@@ -35,11 +35,14 @@ export function LoginForm() {
 
   async function onSubmit(data: LoginFormData) {
     setIsLoading(true);
+    console.log("[Login] Attempting login for:", data.email);
 
     try {
       const result = await signIn(data.email, data.password);
+      console.log("[Login] Result:", JSON.stringify(result));
 
       if (!result.success) {
+        console.error("[Login] Failed:", result.error);
         toast.error(result.error || "Invalid email or password");
         return;
       }
@@ -48,9 +51,11 @@ export function LoginForm() {
 
       // Redirect to the intended page or the default dashboard
       const redirectTo = redirect || result.redirectTo || "/dashboard";
+      console.log("[Login] Redirecting to:", redirectTo);
       router.push(redirectTo);
       router.refresh();
-    } catch {
+    } catch (error) {
+      console.error("[Login] Error:", error);
       toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
