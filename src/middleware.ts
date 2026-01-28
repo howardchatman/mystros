@@ -58,34 +58,6 @@ export async function middleware(request: NextRequest) {
   // Allow all routes - auth is handled client-side in page components
   // This avoids the localStorage/cookie mismatch between client and server
   return NextResponse.next();
-
-  // Note: Intake redirect is disabled for now - dashboard will show
-  // application prompt to students without a submitted application
-  //
-  // To re-enable: Uncomment the block below
-  // if (pathname.startsWith("/dashboard") || pathname.startsWith("/hours") ||
-  //     pathname.startsWith("/documents") || pathname.startsWith("/financial-aid") ||
-  //     pathname.startsWith("/profile")) {
-  //   const { data: profile } = await supabase
-  //     .from("user_profiles")
-  //     .select("role")
-  //     .eq("id", user.id)
-  //     .single();
-  //
-  //   if (profile?.role === "student" && !pathname.startsWith("/intake")) {
-  //     const { data: application } = await supabase
-  //       .from("applications")
-  //       .select("id, submitted_at")
-  //       .eq("user_id", user.id)
-  //       .single();
-  //
-  //     if (!application || !application.submitted_at) {
-  //       return NextResponse.redirect(new URL("/intake", request.url));
-  //     }
-  //   }
-  // }
-
-  return response;
 }
 
 export const config = {
