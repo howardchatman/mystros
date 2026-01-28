@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
@@ -10,11 +10,21 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loginSchema, type LoginFormData } from "@/lib/validations/auth";
-import { signIn } from "@/lib/actions/auth";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
+// Admin roles that should redirect to admin dashboard
+const adminRoles = [
+  "superadmin",
+  "campus_admin",
+  "admissions",
+  "financial_aid",
+  "instructor",
+  "registrar",
+  "auditor",
+];
+
 export function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "";
 
@@ -38,22 +48,46 @@ export function LoginForm() {
     console.log("[Login] Attempting login for:", data.email);
 
     try {
-      const result = await signIn(data.email, data.password);
-      console.log("[Login] Result:", JSON.stringify(result));
+      const supabase = createClient();
 
-      if (!result.success) {
-        console.error("[Login] Failed:", result.error);
-        toast.error(result.error || "Invalid email or password");
+      // Sign in with Supabase client-side
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (error) {
+        console.error("[Login] Auth error:", error.message);
+        toast.error(error.message || "Invalid email or password");
         return;
       }
 
-      toast.success("Welcome back!");
+      if (!authData.user) {
+        toast.error("An unexpected error occurred. Please try again.");
+        return;
+      }
 
-      // Redirect to the intended page or the default dashboard
-      const redirectTo = redirect || result.redirectTo || "/dashboard";
+      console.log("[Login] Auth success, user:", authData.user.id);
+
+      // Get user profile to determine redirect
+      const { data: profile } = await supabase
+        .from("user_profiles")
+        .select("role")
+        .eq("id", authData.user.id)
+        .single();
+
+      console.log("[Login] Profile:", profile);
+
+      // Determine redirect based on role
+      let redirectTo = redirect || "/dashboard";
+      if (!redirect && profile?.role && adminRoles.includes(profile.role)) {
+        redirectTo = "/admin/dashboard";
+      }
+
+      toast.success("Welcome back!");
       console.log("[Login] Redirecting to:", redirectTo);
 
-      // Use window.location for full page navigation to ensure cookies are properly read
+      // Full page navigation to ensure session is read
       window.location.href = redirectTo;
     } catch (error) {
       console.error("[Login] Error:", error);
