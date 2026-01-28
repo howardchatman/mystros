@@ -1,4 +1,4 @@
-import { createBrowserClient } from "@supabase/ssr";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 
 /**
@@ -6,20 +6,14 @@ import type { Database } from "@/types/database";
  * This client uses the anon key and respects RLS policies.
  */
 export function createClient() {
-  return createBrowserClient<Database>(
+  return createSupabaseClient<Database>(
     process.env["NEXT_PUBLIC_SUPABASE_URL"]!,
     process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"]!,
     {
       auth: {
-        flowType: "pkce",
-        detectSessionInUrl: false,
         persistSession: true,
         autoRefreshToken: true,
-      },
-      global: {
-        headers: {
-          "X-Client-Info": "mystros-web",
-        },
+        storageKey: "mystros-auth",
       },
     }
   );
