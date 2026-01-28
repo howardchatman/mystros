@@ -55,29 +55,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Create Supabase client and refresh session
-  const { supabase, response, user } = await createClient(request);
-
-  // Public routes - allow access
+  // For public routes, skip auth check entirely to avoid conflicts
   if (isPublicRoute(pathname)) {
-    // If user is logged in and tries to access login page, redirect to dashboard
-    if (user && pathname === "/login") {
-      // Fetch user profile to determine redirect
-      const { data: profile } = await supabase
-        .from("user_profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
-
-      const redirectUrl =
-        profile?.role && adminRoles.includes(profile.role)
-          ? "/admin/dashboard"
-          : "/dashboard";
-
-      return NextResponse.redirect(new URL(redirectUrl, request.url));
-    }
-    return response;
+    return NextResponse.next();
   }
+
+  // Create Supabase client and refresh session (only for protected routes)
+  const { supabase, response, user } = await createClient(request);
 
   // Protected routes - require authentication
   if (!user) {
