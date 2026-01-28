@@ -8,6 +8,16 @@ import type { Database } from "@/types/database";
 export function createClient() {
   return createBrowserClient<Database>(
     process.env["NEXT_PUBLIC_SUPABASE_URL"]!,
-    process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"]!
+    process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"]!,
+    {
+      auth: {
+        // Disable lock to prevent AbortError on some browsers
+        lock: false,
+        // Don't auto-refresh on page load
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: false,
+      },
+    }
   );
 }
