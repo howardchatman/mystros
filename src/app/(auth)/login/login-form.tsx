@@ -48,13 +48,19 @@ export function LoginForm() {
     console.log("[Login] Attempting login for:", data.email);
 
     try {
+      console.log("[Login] Creating Supabase client...");
+      console.log("[Login] URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+
       const supabase = createClient();
+      console.log("[Login] Client created, calling signInWithPassword...");
 
       // Sign in with Supabase client-side
       const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
+
+      console.log("[Login] Auth response received");
 
       if (error) {
         console.error("[Login] Auth error:", error.message);
