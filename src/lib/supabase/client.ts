@@ -11,12 +11,15 @@ export function createClient() {
     process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"]!,
     {
       auth: {
-        // Disable lock to prevent AbortError on some browsers
-        lock: false,
-        // Don't auto-refresh on page load
-        autoRefreshToken: true,
-        persistSession: true,
+        flowType: "pkce",
         detectSessionInUrl: false,
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+      global: {
+        headers: {
+          "X-Client-Info": "mystros-web",
+        },
       },
     }
   );
