@@ -80,7 +80,8 @@ export function LoginForm() {
 
       // Determine redirect based on role
       let redirectTo = redirect || "/dashboard";
-      if (!redirect && profile?.role && adminRoles.includes(profile.role)) {
+      const userRole = (profile as { role?: string } | null)?.role;
+      if (!redirect && userRole && adminRoles.includes(userRole)) {
         redirectTo = "/admin/dashboard";
       }
 
