@@ -55,9 +55,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Allow all routes - auth is handled client-side in page components
-  // This avoids the localStorage/cookie mismatch between client and server
-  return NextResponse.next();
+  // Refresh the session on every request so cookies stay in sync.
+  // Auth checks are still handled in page layouts — middleware only keeps
+  // the cookie-based session alive.
+  const { response } = await createClient(request);
+  return response;
 }
 
 export const config = {

@@ -1,20 +1,13 @@
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
 import type { Database } from "@/types/database";
 
 /**
  * Creates a Supabase client for use in browser/client components.
- * This client uses the anon key and respects RLS policies.
+ * Uses @supabase/ssr to sync sessions to cookies so the server can read them.
  */
 export function createClient() {
-  return createSupabaseClient<Database>(
+  return createBrowserClient<Database>(
     process.env["NEXT_PUBLIC_SUPABASE_URL"]!,
-    process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"]!,
-    {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        storageKey: "mystros-auth",
-      },
-    }
+    process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"]!
   );
 }
