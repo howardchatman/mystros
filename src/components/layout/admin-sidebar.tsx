@@ -40,7 +40,6 @@ const navItems: NavItem[] = [
     href: "/admin/admissions",
     label: "Admissions",
     icon: UserPlus,
-    roles: ["superadmin", "campus_admin", "admissions"],
     children: [
       { href: "/admin/admissions/leads", label: "Leads" },
       { href: "/admin/admissions/applications", label: "Applications" },
