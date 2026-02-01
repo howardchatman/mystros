@@ -17,7 +17,16 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getUser();
+  let user;
+  try {
+    user = await getUser();
+  } catch (error: any) {
+    // Re-throw Next.js internal errors (DYNAMIC_SERVER_USAGE, redirects, etc.)
+    if (error?.digest) {
+      throw error;
+    }
+    redirect("/login");
+  }
 
   if (!user) {
     redirect("/login");

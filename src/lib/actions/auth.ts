@@ -92,23 +92,33 @@ export async function signOut(): Promise<void> {
  * Get the current authenticated user with their profile
  */
 export async function getUser(): Promise<UserProfile | null> {
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-  if (!user) {
+    if (authError || !user) {
+      return null;
+    }
+
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    return profile;
+  } catch (error: any) {
+    // Re-throw Next.js internal errors (DYNAMIC_SERVER_USAGE, redirects, etc.)
+    if (error?.digest) {
+      throw error;
+    }
+    console.error("[getUser] Error:", error);
     return null;
   }
-
-  const { data: profile } = await supabase
-    .from("user_profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
-  return profile;
 }
 
 /**
