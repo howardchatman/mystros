@@ -43,10 +43,16 @@ export async function createClient(request: NextRequest) {
     }
   );
 
-  // Refresh the session to keep it active
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Refresh the session to keep it active.
+  // Wrapped in try-catch because getUser() can throw AbortError on Edge Runtime.
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch (error) {
+    // Session refresh failed — continue without user.
+    // The page-level auth checks will handle the redirect.
+  }
 
   return { supabase, response, user };
 }

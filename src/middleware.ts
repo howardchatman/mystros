@@ -58,8 +58,14 @@ export async function middleware(request: NextRequest) {
   // Refresh the session on every request so cookies stay in sync.
   // Auth checks are still handled in page layouts — middleware only keeps
   // the cookie-based session alive.
-  const { response } = await createClient(request);
-  return response;
+  try {
+    const { response } = await createClient(request);
+    return response;
+  } catch {
+    // If middleware Supabase call fails, let the request through.
+    // Page-level auth checks will handle protection.
+    return NextResponse.next();
+  }
 }
 
 export const config = {

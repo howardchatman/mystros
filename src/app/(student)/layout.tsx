@@ -7,7 +7,13 @@ export default async function StudentLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getUser();
+  let user;
+  try {
+    user = await getUser();
+  } catch (error: any) {
+    if (error?.digest) throw error;
+    redirect("/login");
+  }
 
   if (!user) {
     redirect("/login");
