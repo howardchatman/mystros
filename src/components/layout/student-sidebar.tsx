@@ -26,7 +26,7 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/hours", label: "My Hours", icon: Clock },
   { href: "/documents", label: "Documents", icon: FileText },
-  { href: "/financial-aid", label: "Financial Aid", icon: DollarSign },
+  { href: "/my-financial-aid", label: "Financial Aid", icon: DollarSign },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
