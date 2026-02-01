@@ -19,12 +19,12 @@ export const metadata = {
 export default async function AdminDashboardPage() {
   const user = await getUser();
 
-  // Fetch all dashboard data in parallel
+  // Fetch all dashboard data in parallel — each function handles its own errors
   const [kpis, roster, applications, attendance] = await Promise.all([
-    getAdminDashboardKPIs(),
-    getStudentRoster(undefined, 5),
-    getPendingApplications(undefined, 5),
-    getTodayAttendanceSummary(),
+    getAdminDashboardKPIs().catch(() => ({ totalActiveStudents: 0, todayAttendanceRate: 0, pendingApplications: 0, totalOutstandingBalance: 0 })),
+    getStudentRoster(undefined, 5).catch(() => ({ students: [], total: 0 })),
+    getPendingApplications(undefined, 5).catch(() => ({ applications: [] })),
+    getTodayAttendanceSummary().catch(() => ({ present: 0, absent: 0, tardy: 0, records: [] })),
   ]);
 
   return (
