@@ -1,10 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ShieldCheck, FileText, Users, AlertCircle, CheckCircle } from "lucide-react";
 import { getPendingDocuments } from "@/lib/actions/document-review";
+import { getAuditLogs } from "@/lib/actions/audit";
 import { DocumentReviewQueue } from "./document-review-queue";
+import { AuditLogViewer } from "./audit-log-viewer";
 
 export const metadata = {
   title: "Compliance | Admin Dashboard",
@@ -41,12 +42,8 @@ export default async function CompliancePage() {
     .from("documents")
     .select("student_id, status, document_type_id");
 
-  // Get recent audit log
-  const { data: auditLog } = await supabase
-    .from("audit_log")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(20);
+  // Get audit logs (paginated)
+  const auditResult = await getAuditLogs({ page: 1, limit: 50 });
 
   const requiredDocCount = documentTypes?.length || 0;
   const activeStudents = students || [];
@@ -232,37 +229,10 @@ export default async function CompliancePage() {
       </Card>
 
       {/* Audit Log */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity Log</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {!auditLog || auditLog.length === 0 ? (
-            <p className="text-center py-6 text-muted-foreground">No audit log entries found.</p>
-          ) : (
-            <div className="space-y-3">
-              {auditLog.map((entry) => (
-                <div key={entry.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
-                  <div className="w-2 h-2 rounded-full bg-brand-accent mt-2 shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm text-foreground">
-                      <span className="font-medium capitalize">{entry.action?.replace(/_/g, " ")}</span>
-                      {entry.table_name && (
-                        <span className="text-muted-foreground"> on {entry.table_name}</span>
-                      )}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(entry.created_at).toLocaleString("en-US", {
-                        month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
-                      })}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <AuditLogViewer
+        initialLogs={auditResult.data?.logs || []}
+        initialTotal={auditResult.data?.total || 0}
+      />
     </div>
   );
 }

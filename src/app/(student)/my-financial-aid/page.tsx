@@ -92,6 +92,13 @@ export default async function StudentFinancialAidPage() {
     .eq("student_id", student.id)
     .single();
 
+  // Get payment history
+  const { data: payments } = await supabase
+    .from("payments")
+    .select("*")
+    .eq("student_id", student.id)
+    .order("payment_date", { ascending: false });
+
   const currentRecord = aidRecords?.[0];
   const totalAwarded = (awards || []).reduce((sum, a) => sum + (a.amount || 0), 0);
   const totalDisbursed = (disbursements || []).filter((d) => d.status === "disbursed").reduce((sum, d) => sum + (d.amount || 0), 0);
@@ -231,6 +238,64 @@ export default async function StudentFinancialAidPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Payment History */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Payment History</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {!payments || payments.length === 0 ? (
+            <p className="text-center py-6 text-muted-foreground">No payments recorded.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Date</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Method</th>
+                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Status</th>
+                    <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {payments.map((p) => (
+                    <tr key={p.id} className="border-b border-border">
+                      <td className="py-3 px-4 text-sm">
+                        {p.payment_date
+                          ? new Date(p.payment_date).toLocaleDateString("en-US", {
+                              month: "short", day: "numeric", year: "numeric",
+                            })
+                          : "—"}
+                      </td>
+                      <td className="py-3 px-4 text-sm capitalize">
+                        {p.payment_method?.replace(/_/g, " ") || "—"}
+                      </td>
+                      <td className="py-3 px-4">
+                        <Badge
+                          variant={
+                            p.status === "completed" ? "default" :
+                            p.status === "pending" ? "outline" :
+                            "destructive"
+                          }
+                          className="capitalize"
+                        >
+                          {p.status?.replace(/_/g, " ") || "Pending"}
+                        </Badge>
+                      </td>
+                      <td className="py-3 px-4 text-right font-medium">
+                        {p.is_refund ? "-" : ""}${Number(p.amount || 0).toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </CardContent>

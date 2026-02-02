@@ -5,6 +5,9 @@ import {
   getFinancialReport,
   getApplicationsReport,
   getSapReport,
+  getCompletionReport,
+  getRetentionReport,
+  getHoursReport,
 } from "@/lib/actions/reports";
 import { ReportDashboard } from "./report-dashboard";
 
@@ -23,6 +26,9 @@ export default async function ReportsPage() {
     financial,
     applications,
     sap,
+    completion,
+    retention,
+    hours,
   ] = await Promise.all([
     supabase.from("campuses").select("id, name").eq("is_active", true).order("name"),
     getEnrollmentReport(),
@@ -30,6 +36,9 @@ export default async function ReportsPage() {
     getFinancialReport(),
     getApplicationsReport(),
     getSapReport(),
+    getCompletionReport(),
+    getRetentionReport(),
+    getHoursReport(),
   ]);
 
   return (
@@ -46,6 +55,9 @@ export default async function ReportsPage() {
         initialFinancial={financial.data || { totalCharges: 0, totalPayments: 0, totalAid: 0, totalBalance: 0, count: 0 }}
         initialApplications={applications.data || { total: 0, statusCounts: {} }}
         initialSap={sap.data || { total: 0, sapCounts: {}, totalHours: 0 }}
+        initialCompletion={completion.data || { total: 0, graduated: 0, rate: 0, byProgram: {} }}
+        initialRetention={retention.data || { total: 0, retained: 0, withdrawn: 0, rate: 0 }}
+        initialHours={hours.data || { totalScheduled: 0, totalActual: 0, variance: 0, rate: 0, recordCount: 0 }}
       />
     </div>
   );

@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Clock, DollarSign, TrendingUp, FileText } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Users, Clock, DollarSign, TrendingUp, FileText, GraduationCap, UserCheck } from "lucide-react";
 import { ReportFilters } from "./report-filters";
 import { BarChart } from "./bar-chart";
 import { CsvExport } from "./csv-export";
@@ -12,6 +13,9 @@ import {
   getFinancialReport,
   getApplicationsReport,
   getSapReport,
+  getCompletionReport,
+  getRetentionReport,
+  getHoursReport,
 } from "@/lib/actions/reports";
 
 interface CampusOption {
@@ -26,6 +30,9 @@ interface ReportDashboardProps {
   initialFinancial: { totalCharges: number; totalPayments: number; totalAid: number; totalBalance: number; count: number };
   initialApplications: { total: number; statusCounts: Record<string, number> };
   initialSap: { total: number; sapCounts: Record<string, number>; totalHours: number };
+  initialCompletion: { total: number; graduated: number; rate: number; byProgram: Record<string, any> };
+  initialRetention: { total: number; retained: number; withdrawn: number; rate: number };
+  initialHours: { totalScheduled: number; totalActual: number; variance: number; rate: number; recordCount: number };
 }
 
 function fmt(amount: number) {
@@ -34,6 +41,7 @@ function fmt(amount: number) {
 
 export function ReportDashboard({
   campuses, initialEnrollment, initialAttendance, initialFinancial, initialApplications, initialSap,
+  initialCompletion, initialRetention, initialHours,
 }: ReportDashboardProps) {
   const [isPending, startTransition] = useTransition();
   const [startDate, setStartDate] = useState("");
@@ -45,6 +53,9 @@ export function ReportDashboard({
   const [financial, setFinancial] = useState(initialFinancial);
   const [applications, setApplications] = useState(initialApplications);
   const [sap, setSap] = useState(initialSap);
+  const [completion, setCompletion] = useState(initialCompletion);
+  const [retention, setRetention] = useState(initialRetention);
+  const [hours, setHours] = useState(initialHours);
 
   const applyFilters = () => {
     const filters = {
@@ -53,18 +64,24 @@ export function ReportDashboard({
       campusId: campusId || undefined,
     };
     startTransition(async () => {
-      const [enr, att, fin, app, sapRes] = await Promise.all([
+      const [enr, att, fin, app, sapRes, compRes, retRes, hrsRes] = await Promise.all([
         getEnrollmentReport(filters),
         getAttendanceReport(filters),
         getFinancialReport(filters),
         getApplicationsReport(filters),
         getSapReport(filters),
+        getCompletionReport(filters),
+        getRetentionReport(filters),
+        getHoursReport(filters),
       ]);
       if (enr.data) setEnrollment(enr.data);
       if (att.data) setAttendance(att.data);
       if (fin.data) setFinancial(fin.data);
       if (app.data) setApplications(app.data);
       if (sapRes.data) setSap(sapRes.data);
+      if (compRes.data) setCompletion(compRes.data);
+      if (retRes.data) setRetention(retRes.data);
+      if (hrsRes.data) setHours(hrsRes.data);
     });
   };
 
@@ -271,6 +288,136 @@ export function ReportDashboard({
                 <p className="text-2xl font-bold text-foreground">{applications.total}</p>
                 <p className="text-sm text-muted-foreground">Total</p>
               </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Completion Report */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="flex items-center gap-2"><GraduationCap className="w-5 h-5" /> Completion Report</CardTitle>
+          <CsvExport
+            filename="completion-report"
+            headers={["Metric", "Value"]}
+            rows={[
+              ["Total Students", completion.total],
+              ["Graduated", completion.graduated],
+              ["Completion Rate", `${completion.rate}%`],
+              ...Object.entries(completion.byProgram).map(([prog, d]: [string, any]) => [prog, `${d.graduated}/${d.total} (${d.rate}%)`]),
+            ]}
+          />
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className="text-2xl font-bold text-foreground">{completion.total}</p>
+              <p className="text-sm text-muted-foreground">Total Students</p>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className="text-2xl font-bold text-green-500">{completion.graduated}</p>
+              <p className="text-sm text-muted-foreground">Graduated</p>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className="text-2xl font-bold text-blue-500">{completion.rate}%</p>
+              <p className="text-sm text-muted-foreground">Completion Rate</p>
+            </div>
+          </div>
+          {Object.keys(completion.byProgram).length > 0 && (
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium text-foreground">By Program</h4>
+              {Object.entries(completion.byProgram).map(([program, data]: [string, any]) => (
+                <div key={program} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                  <span className="text-sm text-foreground">{program}</span>
+                  <div className="flex items-center gap-3 text-sm">
+                    <span className="text-muted-foreground">{data.graduated}/{data.total}</span>
+                    <Badge variant={data.rate >= 75 ? "default" : data.rate >= 50 ? "secondary" : "destructive"}>
+                      {data.rate}%
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Retention Report */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="flex items-center gap-2"><UserCheck className="w-5 h-5" /> Retention Report</CardTitle>
+          <CsvExport
+            filename="retention-report"
+            headers={["Metric", "Value"]}
+            rows={[
+              ["Total Students", retention.total],
+              ["Retained", retention.retained],
+              ["Withdrawn", retention.withdrawn],
+              ["Retention Rate", `${retention.rate}%`],
+            ]}
+          />
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-4 gap-4">
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className="text-2xl font-bold text-foreground">{retention.total}</p>
+              <p className="text-sm text-muted-foreground">Total</p>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className="text-2xl font-bold text-green-500">{retention.retained}</p>
+              <p className="text-sm text-muted-foreground">Retained</p>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className="text-2xl font-bold text-red-500">{retention.withdrawn}</p>
+              <p className="text-sm text-muted-foreground">Withdrawn</p>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className="text-2xl font-bold text-blue-500">{retention.rate}%</p>
+              <p className="text-sm text-muted-foreground">Retention Rate</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Hours Report */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="flex items-center gap-2"><Clock className="w-5 h-5" /> Hours Tracking Report</CardTitle>
+          <CsvExport
+            filename="hours-report"
+            headers={["Metric", "Value"]}
+            rows={[
+              ["Scheduled Hours", hours.totalScheduled],
+              ["Actual Hours", hours.totalActual],
+              ["Variance", hours.variance],
+              ["Completion Rate", `${hours.rate}%`],
+              ["Records", hours.recordCount],
+            ]}
+          />
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className="text-2xl font-bold text-foreground">{hours.totalScheduled.toLocaleString()}</p>
+              <p className="text-sm text-muted-foreground">Scheduled</p>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className="text-2xl font-bold text-blue-500">{hours.totalActual.toLocaleString()}</p>
+              <p className="text-sm text-muted-foreground">Actual</p>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className={`text-2xl font-bold ${hours.variance >= 0 ? "text-green-500" : "text-red-500"}`}>
+                {hours.variance >= 0 ? "+" : ""}{hours.variance.toLocaleString()}
+              </p>
+              <p className="text-sm text-muted-foreground">Variance</p>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className="text-2xl font-bold text-foreground">{hours.rate}%</p>
+              <p className="text-sm text-muted-foreground">Rate</p>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-muted/30">
+              <p className="text-2xl font-bold text-muted-foreground">{hours.recordCount.toLocaleString()}</p>
+              <p className="text-sm text-muted-foreground">Records</p>
             </div>
           </div>
         </CardContent>

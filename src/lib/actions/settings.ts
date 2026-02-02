@@ -94,6 +94,7 @@ export async function createProgramSchedule(data: Omit<ScheduleInsert, "id" | "c
   if (error) return { error: error.message };
   logAudit({ table_name: "program_schedules", record_id: schedule.id, action: "create", new_data: data as Record<string, unknown> }).catch(() => {});
   revalidatePath(SETTINGS_PATH);
+  revalidatePath("/admin/scheduling");
   return { data: schedule };
 }
 
@@ -108,6 +109,7 @@ export async function updateProgramSchedule(id: string, updates: ScheduleUpdate)
   if (error) return { error: error.message };
   logAudit({ table_name: "program_schedules", record_id: id, action: "update", new_data: updates as Record<string, unknown> }).catch(() => {});
   revalidatePath(SETTINGS_PATH);
+  revalidatePath("/admin/scheduling");
   return { data: schedule };
 }
 

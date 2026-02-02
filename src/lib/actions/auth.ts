@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { logAudit } from "@/lib/actions/audit";
 import type { UserProfile, UserRole } from "@/types/database";
 
 // Admin roles that should redirect to admin dashboard
@@ -339,6 +340,55 @@ export async function updateProfile(data: {
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/profile");
+  revalidatePath("/instructor/profile");
   revalidatePath("/profile");
+  return { success: true };
+}
+
+/**
+ * Toggle user active status (superadmin only)
+ */
+export async function toggleUserActive(userId: string): Promise<AuthResult> {
+  const caller = await getUser();
+  if (!caller || caller.role !== "superadmin") {
+    return { success: false, error: "Only superadmins can deactivate users." };
+  }
+
+  if (caller.id === userId) {
+    return { success: false, error: "You cannot deactivate your own account." };
+  }
+
+  const adminSupabase = createAdminClient();
+
+  const { data: profile } = await adminSupabase
+    .from("user_profiles")
+    .select("is_active")
+    .eq("id", userId)
+    .single();
+
+  if (!profile) {
+    return { success: false, error: "User not found." };
+  }
+
+  const newStatus = !profile.is_active;
+
+  const { error } = await adminSupabase
+    .from("user_profiles")
+    .update({ is_active: newStatus })
+    .eq("id", userId);
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  logAudit({
+    table_name: "user_profiles",
+    record_id: userId,
+    action: "update",
+    old_data: { is_active: profile.is_active },
+    new_data: { is_active: newStatus },
+  }).catch(() => {});
+
+  revalidatePath("/admin/settings");
   return { success: true };
 }

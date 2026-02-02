@@ -77,3 +77,116 @@ export async function logAudit(params: AuditParams): Promise<void> {
     console.error("[Audit] Failed to log:", err);
   }
 }
+
+// ─── Audit Log Queries ──────────────────────────────────
+
+export interface AuditLogFilters {
+  search?: string;
+  startDate?: string;
+  endDate?: string;
+  action?: string;
+  tableName?: string;
+  page?: number;
+  limit?: number;
+}
+
+export async function getAuditLogs(filters: AuditLogFilters = {}) {
+  const supabase = await createClient();
+
+  const page = filters.page || 1;
+  const limit = filters.limit || 50;
+  const offset = (page - 1) * limit;
+
+  let query = supabase
+    .from("audit_log")
+    .select("*", { count: "exact" })
+    .order("created_at", { ascending: false });
+
+  if (filters.search) {
+    query = query.or(
+      `user_email.ilike.%${filters.search}%,record_id.ilike.%${filters.search}%`
+    );
+  }
+  if (filters.startDate) {
+    query = query.gte("created_at", filters.startDate);
+  }
+  if (filters.endDate) {
+    const endDateTime = new Date(filters.endDate);
+    endDateTime.setHours(23, 59, 59, 999);
+    query = query.lte("created_at", endDateTime.toISOString());
+  }
+  if (filters.action) {
+    query = query.eq("action", filters.action);
+  }
+  if (filters.tableName) {
+    query = query.eq("table_name", filters.tableName);
+  }
+
+  query = query.range(offset, offset + limit - 1);
+
+  const { data, error, count } = await query;
+  if (error) return { error: error.message };
+
+  return {
+    data: {
+      logs: data || [],
+      total: count || 0,
+      page,
+      limit,
+      totalPages: Math.ceil((count || 0) / limit),
+    },
+  };
+}
+
+export async function exportAuditLogs(filters: AuditLogFilters = {}) {
+  const supabase = await createClient();
+
+  let query = supabase
+    .from("audit_log")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(10000);
+
+  if (filters.search) {
+    query = query.or(
+      `user_email.ilike.%${filters.search}%,record_id.ilike.%${filters.search}%`
+    );
+  }
+  if (filters.startDate) {
+    query = query.gte("created_at", filters.startDate);
+  }
+  if (filters.endDate) {
+    const endDateTime = new Date(filters.endDate);
+    endDateTime.setHours(23, 59, 59, 999);
+    query = query.lte("created_at", endDateTime.toISOString());
+  }
+  if (filters.action) {
+    query = query.eq("action", filters.action);
+  }
+  if (filters.tableName) {
+    query = query.eq("table_name", filters.tableName);
+  }
+
+  const { data, error } = await query;
+  if (error) return { error: error.message };
+
+  const headers = ["Date", "User", "Role", "Action", "Table", "Record ID", "Changed Fields"];
+  const rows = (data || []).map((log) => [
+    new Date(log.created_at).toLocaleString(),
+    log.user_email || "System",
+    log.user_role || "",
+    log.action?.replace(/_/g, " ") || "",
+    log.table_name || "",
+    log.record_id || "",
+    log.changed_fields?.join(", ") || "",
+  ]);
+
+  const csv = [
+    headers.join(","),
+    ...rows.map((row) =>
+      row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+    ),
+  ].join("\n");
+
+  return { data: csv };
+}

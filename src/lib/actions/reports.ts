@@ -166,3 +166,90 @@ export async function getSapReport(filters?: ReportFilters) {
 
   return { data: { total: students?.length || 0, sapCounts, totalHours } };
 }
+
+export async function getCompletionReport(filters?: ReportFilters) {
+  const supabase = await createClient();
+
+  let query = supabase
+    .from("students")
+    .select("id, status, graduation_date, program_id, program:programs(name)");
+
+  if (filters?.campusId) query = query.eq("campus_id", filters.campusId);
+  if (filters?.startDate) query = query.gte("enrollment_date", filters.startDate);
+  if (filters?.endDate) query = query.lte("enrollment_date", filters.endDate);
+
+  const { data: students, error } = await query;
+  if (error) return { error: error.message };
+
+  const graduated = (students || []).filter((s) => s.status === "graduated");
+  const total = students?.length || 0;
+  const rate = total > 0 ? Math.round((graduated.length / total) * 100) : 0;
+
+  const byProgram: Record<string, { graduated: number; total: number; rate: number }> = {};
+  (students || []).forEach((s) => {
+    const program = s.program as { name?: string } | { name?: string }[] | null;
+    const programName = Array.isArray(program) ? program[0]?.name : program?.name;
+    const key = programName || "Unknown";
+    if (!byProgram[key]) byProgram[key] = { graduated: 0, total: 0, rate: 0 };
+    byProgram[key]!.total++;
+    if (s.status === "graduated") byProgram[key]!.graduated++;
+  });
+
+  Object.keys(byProgram).forEach((key) => {
+    const prog = byProgram[key]!;
+    prog.rate = prog.total > 0 ? Math.round((prog.graduated / prog.total) * 100) : 0;
+  });
+
+  return { data: { total, graduated: graduated.length, rate, byProgram } };
+}
+
+export async function getRetentionReport(filters?: ReportFilters) {
+  const supabase = await createClient();
+
+  let query = supabase
+    .from("students")
+    .select("id, status, enrollment_date");
+
+  if (filters?.campusId) query = query.eq("campus_id", filters.campusId);
+  if (filters?.startDate) query = query.gte("enrollment_date", filters.startDate);
+  if (filters?.endDate) query = query.lte("enrollment_date", filters.endDate);
+
+  const { data: students, error } = await query;
+  if (error) return { error: error.message };
+
+  const retained = (students || []).filter((s) =>
+    ["active", "enrolled", "loa", "graduated"].includes(s.status)
+  );
+  const withdrawn = (students || []).filter((s) =>
+    ["withdrawn", "dropped"].includes(s.status)
+  );
+  const total = students?.length || 0;
+  const rate = total > 0 ? Math.round((retained.length / total) * 100) : 0;
+
+  return { data: { total, retained: retained.length, withdrawn: withdrawn.length, rate } };
+}
+
+export async function getHoursReport(filters?: ReportFilters) {
+  const supabase = await createClient();
+
+  const defaultStart = new Date();
+  defaultStart.setDate(defaultStart.getDate() - 30);
+
+  let query = supabase
+    .from("attendance_records")
+    .select("scheduled_hours, actual_hours, campus_id, attendance_date");
+
+  if (filters?.campusId) query = query.eq("campus_id", filters.campusId);
+  query = query.gte("attendance_date", filters?.startDate || defaultStart.toISOString().split("T")[0]);
+  if (filters?.endDate) query = query.lte("attendance_date", filters.endDate);
+
+  const { data: records, error } = await query;
+  if (error) return { error: error.message };
+
+  const totalScheduled = (records || []).reduce((sum, r) => sum + (r.scheduled_hours || 0), 0);
+  const totalActual = (records || []).reduce((sum, r) => sum + (r.actual_hours || 0), 0);
+  const variance = totalActual - totalScheduled;
+  const rate = totalScheduled > 0 ? Math.round((totalActual / totalScheduled) * 100) : 0;
+
+  return { data: { totalScheduled, totalActual, variance, rate, recordCount: records?.length || 0 } };
+}

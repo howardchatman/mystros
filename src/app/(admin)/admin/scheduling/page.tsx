@@ -1,4 +1,5 @@
 import { getProgramSchedules, getCalendarEvents } from "@/lib/actions/scheduling";
+import { createClient } from "@/lib/supabase/server";
 import { ScheduleManager } from "./schedule-manager";
 
 export const metadata = {
@@ -8,9 +9,12 @@ export const metadata = {
 
 export default async function SchedulingPage() {
   const now = new Date();
-  const [scheduleResult, eventsResult] = await Promise.all([
+  const supabase = await createClient();
+
+  const [scheduleResult, eventsResult, { data: programs }] = await Promise.all([
     getProgramSchedules(),
     getCalendarEvents(now.getMonth() + 1, now.getFullYear()),
+    supabase.from("programs").select("id, name").eq("is_active", true).order("name"),
   ]);
 
   return (
@@ -24,6 +28,7 @@ export default async function SchedulingPage() {
         events={eventsResult.data || []}
         currentMonth={now.getMonth() + 1}
         currentYear={now.getFullYear()}
+        programs={(programs || []).map((p) => ({ id: p.id, name: p.name }))}
       />
     </div>
   );

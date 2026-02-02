@@ -3,9 +3,9 @@
 import { useState, useTransition } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { updateUserRole } from "@/lib/actions/auth";
+import { updateUserRole, toggleUserActive } from "@/lib/actions/auth";
 import { toast } from "sonner";
-import { Pencil, Check, X } from "lucide-react";
+import { Pencil, Check, X, Ban, CheckCircle } from "lucide-react";
 import type { UserProfile, UserRole } from "@/types/database";
 
 const roleOptions: { value: UserRole; label: string }[] = [
@@ -49,6 +49,17 @@ export function AdminUsersTable({ adminUsers, currentUserId }: AdminUsersTablePr
     });
   }
 
+  function handleToggleActive(userId: string) {
+    startTransition(async () => {
+      const result = await toggleUserActive(userId);
+      if (result.success) {
+        toast.success("User status updated.");
+      } else {
+        toast.error(result.error || "Failed to update status.");
+      }
+    });
+  }
+
   if (adminUsers.length === 0) {
     return <p className="text-center py-6 text-muted-foreground">No admin users found.</p>;
   }
@@ -61,6 +72,7 @@ export function AdminUsersTable({ adminUsers, currentUserId }: AdminUsersTablePr
             <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Name</th>
             <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Email</th>
             <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Role</th>
+            <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Status</th>
             <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Actions</th>
           </tr>
         </thead>
@@ -94,6 +106,11 @@ export function AdminUsersTable({ adminUsers, currentUserId }: AdminUsersTablePr
                     </Badge>
                   )}
                 </td>
+                <td className="py-3 px-4">
+                  <Badge variant={user.is_active ? "default" : "destructive"}>
+                    {user.is_active ? "Active" : "Inactive"}
+                  </Badge>
+                </td>
                 <td className="py-3 px-4 text-right">
                   {isSelf ? (
                     <span className="text-xs text-muted-foreground">You</span>
@@ -112,9 +129,20 @@ export function AdminUsersTable({ adminUsers, currentUserId }: AdminUsersTablePr
                       </Button>
                     </div>
                   ) : (
-                    <Button variant="ghost" size="sm" onClick={() => startEditing(user)}>
-                      <Pencil className="w-4 h-4" />
-                    </Button>
+                    <div className="flex items-center justify-end gap-1">
+                      <Button variant="ghost" size="sm" onClick={() => startEditing(user)}>
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleToggleActive(user.id)}
+                        disabled={isPending}
+                        className={user.is_active ? "text-red-500 hover:text-red-600" : "text-green-500 hover:text-green-600"}
+                      >
+                        {user.is_active ? <Ban className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
+                      </Button>
+                    </div>
                   )}
                 </td>
               </tr>
