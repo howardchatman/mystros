@@ -8,6 +8,11 @@ import {
   disbursementReleasedEmail,
   documentRequestEmail,
   documentRejectionEmail,
+  enrollmentConfirmationEmail,
+  paymentConfirmationEmail,
+  attendanceAlertEmail,
+  milestoneAchievementEmail,
+  graduationCongratulationsEmail,
 } from "@/lib/email-templates";
 
 async function getStudentProfile(studentId: string) {
@@ -132,6 +137,135 @@ export async function sendDocumentRejectionEmail(
     return { success: true };
   } catch (err) {
     console.error("[Email] Document rejection failed:", err);
+    return { success: false, error: String(err) };
+  }
+}
+
+export async function sendEnrollmentConfirmationEmail(
+  studentId: string,
+  programName: string,
+  campusName: string,
+  startDate: string,
+  studentNumber: string
+) {
+  try {
+    const student = await getStudentProfile(studentId);
+    if (!student?.email) return { success: false, error: "No email found" };
+
+    const { subject, html } = enrollmentConfirmationEmail({
+      firstName: student.first_name,
+      studentNumber,
+      programName,
+      campusName,
+      startDate,
+    });
+
+    await getResend().emails.send({ from: FROM_EMAIL, to: student.email, subject, html });
+    return { success: true };
+  } catch (err) {
+    console.error("[Email] Enrollment confirmation failed:", err);
+    return { success: false, error: String(err) };
+  }
+}
+
+export async function sendPaymentConfirmationEmail(
+  studentId: string,
+  amount: number,
+  paymentDate: string,
+  paymentMethod: string,
+  confirmationNumber: string,
+  newBalance: number
+) {
+  try {
+    const student = await getStudentProfile(studentId);
+    if (!student?.email) return { success: false, error: "No email found" };
+
+    const { subject, html } = paymentConfirmationEmail({
+      firstName: student.first_name,
+      amount,
+      paymentDate,
+      paymentMethod,
+      confirmationNumber,
+      newBalance,
+    });
+
+    await getResend().emails.send({ from: FROM_EMAIL, to: student.email, subject, html });
+    return { success: true };
+  } catch (err) {
+    console.error("[Email] Payment confirmation failed:", err);
+    return { success: false, error: String(err) };
+  }
+}
+
+export async function sendAttendanceAlertEmail(
+  studentId: string,
+  absenceCount: number,
+  dateRange: string
+) {
+  try {
+    const student = await getStudentProfile(studentId);
+    if (!student?.email) return { success: false, error: "No email found" };
+
+    const { subject, html } = attendanceAlertEmail({
+      firstName: student.first_name,
+      absenceCount,
+      dateRange,
+    });
+
+    await getResend().emails.send({ from: FROM_EMAIL, to: student.email, subject, html });
+    return { success: true };
+  } catch (err) {
+    console.error("[Email] Attendance alert failed:", err);
+    return { success: false, error: String(err) };
+  }
+}
+
+export async function sendMilestoneAchievementEmail(
+  studentId: string,
+  milestone: string,
+  totalHours: number,
+  percentComplete: number
+) {
+  try {
+    const student = await getStudentProfile(studentId);
+    if (!student?.email) return { success: false, error: "No email found" };
+
+    const { subject, html } = milestoneAchievementEmail({
+      firstName: student.first_name,
+      milestone,
+      totalHours,
+      percentComplete,
+    });
+
+    await getResend().emails.send({ from: FROM_EMAIL, to: student.email, subject, html });
+    return { success: true };
+  } catch (err) {
+    console.error("[Email] Milestone achievement failed:", err);
+    return { success: false, error: String(err) };
+  }
+}
+
+export async function sendGraduationCongratulationsEmail(
+  studentId: string,
+  programName: string,
+  graduationDate: string,
+  totalHours: number
+) {
+  try {
+    const student = await getStudentProfile(studentId);
+    if (!student?.email) return { success: false, error: "No email found" };
+
+    const { subject, html } = graduationCongratulationsEmail({
+      firstName: student.first_name,
+      programName,
+      graduationDate,
+      totalHours,
+    });
+
+    await getResend().emails.send({ from: FROM_EMAIL, to: student.email, subject, html });
+    return { success: true };
+  } catch (err) {
+    console.error("[Email] Graduation congratulations failed:", err);
     return { success: false, error: String(err) };
   }
 }

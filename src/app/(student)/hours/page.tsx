@@ -5,6 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Clock, BookOpen, Scissors, Calendar, TrendingUp, CheckCircle } from "lucide-react";
+import { getMyClockStatus } from "@/lib/actions/student-attendance";
+import { ClockControls } from "@/components/student/clock-controls";
+import { PdfDownloadButton } from "@/components/pdf-download-button";
 
 export const metadata = {
   title: "My Hours | Student Portal",
@@ -79,6 +82,9 @@ export default async function HoursPage() {
     );
   }
 
+  // Get today's clock status
+  const clockStatus = await getMyClockStatus();
+
   // Get recent attendance records
   const { data: recentAttendance } = await supabase
     .from("attendance_records")
@@ -127,6 +133,9 @@ export default async function HoursPage() {
           {program?.name || "Program"} • {(student.campus as { name?: string })?.name || "Campus"}
         </p>
       </div>
+
+      {/* Clock In/Out Controls */}
+      <ClockControls activeRecord={clockStatus} />
 
       {/* Overall Progress */}
       <Card>
@@ -271,6 +280,11 @@ export default async function HoursPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Transcript Download */}
+      <div className="flex justify-end">
+        <PdfDownloadButton type="transcript" studentId={student.id} />
+      </div>
 
       {/* SAP Status */}
       <Card>

@@ -183,3 +183,158 @@ export function documentRejectionEmail(params: {
     `),
   };
 }
+
+// ─── Phase 8 Templates ──────────────────────────────────
+
+export function enrollmentConfirmationEmail(params: {
+  firstName: string;
+  studentNumber: string;
+  programName: string;
+  campusName: string;
+  startDate: string;
+}): { subject: string; html: string } {
+  const { firstName, studentNumber, programName, campusName, startDate } = params;
+
+  return {
+    subject: "Welcome to Mystros Barber Academy — You're Enrolled!",
+    html: layout(`
+      <h2 style="margin:0 0 16px;color:#0f172a;">Welcome, ${firstName}!</h2>
+      <p style="color:#334155;line-height:1.6;">
+        Congratulations — you are officially enrolled at Mystros Barber Academy! Here are your enrollment details:
+      </p>
+      <table cellpadding="8" cellspacing="0" style="margin:16px 0;border:1px solid #e2e8f0;border-radius:6px;width:100%;">
+        <tr style="background:#f8fafc;"><td style="font-weight:bold;color:#0f172a;">Student Number</td><td style="text-align:right;color:#334155;font-family:monospace;">${studentNumber}</td></tr>
+        <tr><td style="font-weight:bold;color:#0f172a;">Program</td><td style="text-align:right;color:#334155;">${programName}</td></tr>
+        <tr style="background:#f8fafc;"><td style="font-weight:bold;color:#0f172a;">Campus</td><td style="text-align:right;color:#334155;">${campusName}</td></tr>
+        <tr><td style="font-weight:bold;color:#0f172a;">Start Date</td><td style="text-align:right;color:#334155;">${startDate}</td></tr>
+      </table>
+      <p style="color:#334155;line-height:1.6;">
+        Log in to your student portal to view your schedule, upload required documents, and track your progress.
+      </p>
+      <table cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr><td style="background:#f59e0b;border-radius:6px;padding:12px 24px;">
+      <a href="https://mystrosbarber.com/login" style="color:#ffffff;text-decoration:none;font-weight:bold;">Log In to Portal</a>
+      </td></tr>
+      </table>
+    `),
+  };
+}
+
+export function paymentConfirmationEmail(params: {
+  firstName: string;
+  amount: number;
+  paymentDate: string;
+  paymentMethod: string;
+  confirmationNumber: string;
+  newBalance: number;
+}): { subject: string; html: string } {
+  const { firstName, amount, paymentDate, paymentMethod, confirmationNumber, newBalance } = params;
+  const fmtAmount = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount);
+  const fmtBalance = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(newBalance);
+
+  return {
+    subject: "Payment Received — Mystros Barber Academy",
+    html: layout(`
+      <h2 style="margin:0 0 16px;color:#0f172a;">Payment Confirmation</h2>
+      <p style="color:#334155;line-height:1.6;">Hi ${firstName}, your payment has been received. Thank you!</p>
+      <table cellpadding="8" cellspacing="0" style="margin:16px 0;border:1px solid #e2e8f0;border-radius:6px;width:100%;">
+        <tr style="background:#f8fafc;"><td style="font-weight:bold;color:#0f172a;">Amount Paid</td><td style="text-align:right;color:#16a34a;font-weight:bold;">${fmtAmount}</td></tr>
+        <tr><td style="font-weight:bold;color:#0f172a;">Date</td><td style="text-align:right;color:#334155;">${paymentDate}</td></tr>
+        <tr style="background:#f8fafc;"><td style="font-weight:bold;color:#0f172a;">Method</td><td style="text-align:right;color:#334155;">${paymentMethod}</td></tr>
+        <tr><td style="font-weight:bold;color:#0f172a;">Confirmation #</td><td style="text-align:right;color:#334155;font-family:monospace;">${confirmationNumber}</td></tr>
+        <tr style="background:#f8fafc;"><td style="font-weight:bold;color:#0f172a;">Remaining Balance</td><td style="text-align:right;color:#334155;font-weight:bold;">${fmtBalance}</td></tr>
+      </table>
+      <p style="color:#334155;line-height:1.6;">
+        View your account details in the <a href="https://mystrosbarber.com/my-financial-aid" style="color:#f59e0b;">student portal</a>.
+      </p>
+    `),
+  };
+}
+
+export function attendanceAlertEmail(params: {
+  firstName: string;
+  absenceCount: number;
+  dateRange: string;
+}): { subject: string; html: string } {
+  const { firstName, absenceCount, dateRange } = params;
+
+  return {
+    subject: "Attendance Alert — Mystros Barber Academy",
+    html: layout(`
+      <h2 style="margin:0 0 16px;color:#0f172a;">Attendance Alert</h2>
+      <p style="color:#334155;line-height:1.6;">Hi ${firstName},</p>
+      <p style="margin:16px 0;padding:12px 16px;background:#fffbeb;border-left:4px solid #f59e0b;border-radius:4px;color:#334155;">
+        You have <strong>${absenceCount} absence${absenceCount > 1 ? "s" : ""}</strong> in the past ${dateRange}.
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        Regular attendance is essential for completing your program on time and maintaining satisfactory academic progress (SAP).
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        If you are experiencing difficulties, please speak with your instructor or campus advisor. We're here to help.
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        View your attendance in the <a href="https://mystrosbarber.com/hours" style="color:#f59e0b;">student portal</a>.
+      </p>
+    `),
+  };
+}
+
+export function milestoneAchievementEmail(params: {
+  firstName: string;
+  milestone: string;
+  totalHours: number;
+  percentComplete: number;
+}): { subject: string; html: string } {
+  const { firstName, milestone, totalHours, percentComplete } = params;
+
+  return {
+    subject: `Milestone Reached: ${milestone} — Mystros Barber Academy`,
+    html: layout(`
+      <h2 style="margin:0 0 16px;color:#0f172a;">Congratulations, ${firstName}!</h2>
+      <p style="margin:16px 0;padding:16px;background:#f0fdf4;border-left:4px solid #16a34a;border-radius:4px;text-align:center;">
+        <span style="font-size:32px;">&#127942;</span><br/>
+        <strong style="color:#16a34a;font-size:18px;">${milestone} Milestone Reached!</strong>
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        You've completed <strong>${totalHours.toLocaleString()} hours</strong> — that's <strong>${percentComplete}%</strong> of your program. Keep up the great work!
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        Track your full progress in the <a href="https://mystrosbarber.com/hours" style="color:#f59e0b;">student portal</a>.
+      </p>
+    `),
+  };
+}
+
+export function graduationCongratulationsEmail(params: {
+  firstName: string;
+  programName: string;
+  graduationDate: string;
+  totalHours: number;
+}): { subject: string; html: string } {
+  const { firstName, programName, graduationDate, totalHours } = params;
+
+  return {
+    subject: "Congratulations, Graduate! — Mystros Barber Academy",
+    html: layout(`
+      <h2 style="margin:0 0 16px;color:#0f172a;">Congratulations, ${firstName}!</h2>
+      <p style="margin:16px 0;padding:16px;background:#f0fdf4;border-left:4px solid #16a34a;border-radius:4px;text-align:center;">
+        <span style="font-size:32px;">&#127891;</span><br/>
+        <strong style="color:#16a34a;font-size:18px;">You Did It!</strong>
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        You have successfully completed the <strong>${programName}</strong> program at Mystros Barber Academy with <strong>${totalHours.toLocaleString()} hours</strong>.
+      </p>
+      <table cellpadding="8" cellspacing="0" style="margin:16px 0;border:1px solid #e2e8f0;border-radius:6px;width:100%;">
+        <tr style="background:#f8fafc;"><td style="font-weight:bold;color:#0f172a;">Program</td><td style="text-align:right;color:#334155;">${programName}</td></tr>
+        <tr><td style="font-weight:bold;color:#0f172a;">Completion Date</td><td style="text-align:right;color:#334155;">${graduationDate}</td></tr>
+        <tr style="background:#f8fafc;"><td style="font-weight:bold;color:#0f172a;">Total Hours</td><td style="text-align:right;color:#334155;">${totalHours.toLocaleString()}</td></tr>
+      </table>
+      <p style="color:#334155;line-height:1.6;">
+        Your next steps include applying for your state barber license. Contact your campus for guidance on the licensing exam and any required documentation.
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        We're proud of you and wish you the best in your barbering career!
+      </p>
+    `),
+  };
+}

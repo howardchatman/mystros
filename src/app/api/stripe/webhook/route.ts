@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe, isStripeEnabled } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getResend, FROM_EMAIL } from "@/lib/email";
+import { paymentConfirmationEmail } from "@/lib/email-templates";
 
 export async function POST(req: NextRequest) {
   if (!isStripeEnabled()) {
@@ -66,6 +68,35 @@ export async function POST(req: NextRequest) {
             current_balance: currentBalance,
           })
           .eq("student_id", studentId);
+      }
+
+      // Send payment confirmation email
+      const { data: studentProfile } = await supabase
+        .from("students")
+        .select("email, first_name")
+        .eq("id", studentId)
+        .single();
+
+      if (studentProfile?.email) {
+        const newBalance = account
+          ? (account.total_charges || 0) - ((account.total_payments || 0) + amountPaid) - (account.total_aid_posted || 0)
+          : 0;
+
+        const { subject, html } = paymentConfirmationEmail({
+          firstName: studentProfile.first_name,
+          amount: amountPaid,
+          paymentDate: new Date().toLocaleDateString("en-US"),
+          paymentMethod: "Credit/Debit Card (Stripe)",
+          confirmationNumber: typeof session.payment_intent === "string" ? session.payment_intent : session.id,
+          newBalance,
+        });
+
+        getResend().emails.send({
+          from: FROM_EMAIL,
+          to: studentProfile.email,
+          subject,
+          html,
+        }).catch((err: unknown) => console.error("[Stripe Webhook] Email send error:", err));
       }
 
       // Audit log

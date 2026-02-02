@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { logAudit } from "@/lib/actions/audit";
+import { sendAttendanceAlertEmail, sendMilestoneAchievementEmail } from "@/lib/actions/email";
 
 // ─── Helpers ───────────────────────────────────────────────
 
@@ -225,11 +226,11 @@ export async function clockOut(
     }
 
     // Check for hour milestones
-    await checkHourMilestones(
-      student.id,
-      (student.total_hours_completed || 0) + actualHours,
-      userId
-    );
+    const newTotal = (student.total_hours_completed || 0) + actualHours;
+    await checkHourMilestones(student.id, newTotal, userId);
+
+    // Check for attendance alerts (3+ absences in 14 days)
+    checkAttendanceAlert(student.id).catch(() => {});
   }
 
   logAudit({
@@ -241,6 +242,7 @@ export async function clockOut(
 
   revalidatePath("/admin/attendance");
   revalidatePath("/instructor/attendance");
+  revalidatePath("/hours");
   return { data: { actualHours, theoryHours, practicalHours } };
 }
 
@@ -254,9 +256,31 @@ async function checkHourMilestones(
   const milestones = [100, 250, 500, 750, 1000];
   const supabase = await createClient();
 
+  // Get existing milestones to detect new ones
+  const { data: existing } = await supabase
+    .from("student_milestones")
+    .select("milestone_type")
+    .eq("student_id", studentId);
+
+  const existingTypes = new Set((existing || []).map((m) => m.milestone_type));
+
+  // Get student's program total hours for percentage calculation
+  const { data: studentData } = await supabase
+    .from("students")
+    .select("program:programs(total_hours)")
+    .eq("id", studentId)
+    .single();
+
+  const programTotalHours = studentData?.program
+    ? (Array.isArray(studentData.program)
+        ? studentData.program[0]?.total_hours
+        : (studentData.program as { total_hours?: number })?.total_hours) || 1500
+    : 1500;
+
   for (const threshold of milestones) {
     if (totalHours >= threshold) {
       const type = `hours_${threshold}`;
+
       // Upsert — only inserts if not already recorded
       await supabase
         .from("student_milestones")
@@ -269,6 +293,52 @@ async function checkHourMilestones(
           },
           { onConflict: "student_id,milestone_type" }
         );
+
+      // Send email only for newly achieved milestones
+      if (!existingTypes.has(type)) {
+        const percentComplete = Math.round((totalHours / programTotalHours) * 100);
+        sendMilestoneAchievementEmail(
+          studentId,
+          `${threshold} Hours`,
+          totalHours,
+          percentComplete
+        ).catch(() => {});
+      }
+    }
+  }
+}
+
+// ─── Attendance Alert ─────────────────────────────────────────
+
+async function checkAttendanceAlert(studentId: string) {
+  const supabase = await createClient();
+  const fourteenDaysAgo = new Date();
+  fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+
+  const { count } = await supabase
+    .from("attendance_records")
+    .select("id", { count: "exact" })
+    .eq("student_id", studentId)
+    .eq("status", "absent")
+    .gte("attendance_date", fourteenDaysAgo.toISOString().split("T")[0]);
+
+  if ((count || 0) >= 3) {
+    // Check if we already sent an alert in the last 7 days
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const { data: recentAlert } = await supabase
+      .from("in_app_notifications")
+      .select("id")
+      .eq("user_id", studentId)
+      .eq("type", "attendance_alert")
+      .gte("created_at", sevenDaysAgo.toISOString())
+      .maybeSingle();
+
+    if (!recentAlert) {
+      const today = new Date().toISOString().split("T")[0];
+      const dateRange = `${fourteenDaysAgo.toISOString().split("T")[0]} to ${today}`;
+      sendAttendanceAlertEmail(studentId, count || 3, dateRange).catch(() => {});
     }
   }
 }

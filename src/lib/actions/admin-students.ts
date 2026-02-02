@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import type { StudentStatus } from "@/types/database";
 import { notifyApplicationStatus } from "@/lib/actions/notifications";
 import { logAudit } from "@/lib/actions/audit";
+import { sendEnrollmentConfirmationEmail, sendGraduationCongratulationsEmail } from "@/lib/actions/email";
 
 export interface StudentFilters {
   status?: StudentStatus;
@@ -167,6 +168,29 @@ export async function updateStudentStatus(
     old_data: { status: oldRecord?.status },
     new_data: { status },
   }).catch(() => {});
+
+  // Send graduation email if newly graduated
+  if (status === "graduated") {
+    const supabase2 = await createClient();
+    const { data: graduatedStudent } = await supabase2
+      .from("students")
+      .select("total_hours_completed, program:programs(name)")
+      .eq("id", studentId)
+      .single();
+
+    if (graduatedStudent) {
+      const prog = Array.isArray(graduatedStudent.program)
+        ? graduatedStudent.program[0]
+        : graduatedStudent.program;
+      const gradDate = new Date().toISOString().split("T")[0] || "";
+      sendGraduationCongratulationsEmail(
+        studentId,
+        (prog as { name?: string })?.name || "Program",
+        gradDate,
+        graduatedStudent.total_hours_completed || 0
+      ).catch(() => {});
+    }
+  }
 
   revalidatePath("/admin/students");
   revalidatePath(`/admin/students/${studentId}`);
@@ -385,26 +409,77 @@ export async function enrollStudent(applicationId: string, startDate: string) {
     })
     .eq("id", applicationId);
 
-  // Create student account
+  // Create student account and enrollment charges
+  const prog = application.program as {
+    tuition_amount?: number;
+    registration_fee?: number;
+    books_supplies_amount?: number;
+  } | null;
+
+  const tuition = prog?.tuition_amount || 0;
+  const registrationFee = prog?.registration_fee || 0;
+  const booksFee = prog?.books_supplies_amount || 0;
+  const totalCharges = tuition + registrationFee + booksFee;
+
   await supabase.from("student_accounts").insert({
     student_id: student.id,
-    total_charges: 0,
+    total_charges: totalCharges,
     total_payments: 0,
     total_aid_posted: 0,
-    current_balance: 0,
+    current_balance: totalCharges,
   });
+
+  // Create individual charge records
+  const today = new Date().toISOString().split("T")[0] || "";
+  const charges: { student_id: string; charge_date: string; charge_type: string; description: string; amount: number }[] = [];
+
+  if (tuition > 0) {
+    charges.push({
+      student_id: student.id,
+      charge_date: today,
+      charge_type: "tuition",
+      description: `Tuition - ${(application.program as { name?: string })?.name || "Program"}`,
+      amount: tuition,
+    });
+  }
+  if (registrationFee > 0) {
+    charges.push({
+      student_id: student.id,
+      charge_date: today,
+      charge_type: "registration",
+      description: "Registration Fee",
+      amount: registrationFee,
+    });
+  }
+  if (booksFee > 0) {
+    charges.push({
+      student_id: student.id,
+      charge_date: today,
+      charge_type: "books_supplies",
+      description: "Books & Supplies",
+      amount: booksFee,
+    });
+  }
+
+  if (charges.length > 0) {
+    await supabase.from("charges").insert(charges);
+  }
 
   logAudit({
     table_name: "students",
     record_id: student.id,
     action: "create",
-    new_data: { student_number: studentNumber, application_id: applicationId, start_date: startDate },
+    new_data: { student_number: studentNumber, application_id: applicationId, start_date: startDate, total_charges: totalCharges },
   }).catch(() => {});
 
-  // Send enrollment notification
+  // Send enrollment notification (in-app + email)
   if (application.user_id) {
-    await notifyApplicationStatus(application.user_id, "enrolled");
+    notifyApplicationStatus(application.user_id, "enrolled").catch(() => {});
   }
+
+  const campusName = (application.campus as { name?: string })?.name || "";
+  const programName = (application.program as { name?: string })?.name || "";
+  sendEnrollmentConfirmationEmail(student.id, programName, campusName, startDate, studentNumber).catch(() => {});
 
   revalidatePath("/admin/students");
   revalidatePath("/admin/admissions/applications");

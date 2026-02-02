@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, FileText, CheckCircle, Clock, AlertCircle } from "lucide-react";
 import { MakePaymentButton } from "./make-payment-button";
+import { PdfDownloadButton } from "@/components/pdf-download-button";
 
 export const metadata = {
   title: "Financial Aid | Student Portal",
@@ -108,9 +109,12 @@ export default async function StudentFinancialAidPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-display font-bold text-foreground">Financial Aid</h1>
-        <p className="text-muted-foreground">View your financial aid status and awards</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-display font-bold text-foreground">Financial Aid</h1>
+          <p className="text-muted-foreground">View your financial aid status and awards</p>
+        </div>
+        <PdfDownloadButton type="financial" studentId={student.id} />
       </div>
 
       {/* Account Balance */}

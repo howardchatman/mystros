@@ -10,6 +10,7 @@ import { StudentFinancialSection } from "./student-financial-section";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { PdfDownloadButton } from "@/components/pdf-download-button";
 
 interface StudentDetailClientProps {
   student: any;
@@ -44,6 +45,13 @@ export function StudentDetailClient({ student, sapHistory, documents, account, a
             {student.student_number}
             {program && ` · ${program.name}`}
           </p>
+        </div>
+        <div className="ml-auto flex gap-2">
+          <PdfDownloadButton type="transcript" studentId={student.id} />
+          {student.status === "graduated" && (
+            <PdfDownloadButton type="certificate" studentId={student.id} />
+          )}
+          <PdfDownloadButton type="financial" studentId={student.id} />
         </div>
       </div>
 
