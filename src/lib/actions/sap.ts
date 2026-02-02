@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { SapStatus } from "@/types/database";
+import { notifySapAlert } from "@/lib/actions/notifications";
 
 // ─── Check if SAP Evaluation is Due ───────────────────────
 
@@ -185,6 +186,11 @@ export async function calculateSap(studentId: string) {
     .from("students")
     .update({ current_sap_status: newStatus })
     .eq("id", studentId);
+
+  // Notify student of SAP status change
+  if (newStatus !== previousStatus) {
+    await notifySapAlert(studentId, newStatus).catch(() => {});
+  }
 
   revalidatePath(`/admin/students/${studentId}`);
   revalidatePath("/admin/students");

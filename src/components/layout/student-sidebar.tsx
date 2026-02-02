@@ -12,6 +12,10 @@ import {
   LogOut,
   Menu,
   X,
+  Bell,
+  Award,
+  Trophy,
+  Calendar,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { signOut } from "@/lib/actions/auth";
@@ -25,8 +29,12 @@ interface StudentSidebarProps {
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/hours", label: "My Hours", icon: Clock },
+  { href: "/competencies", label: "Skills Progress", icon: Award },
+  { href: "/milestones", label: "Milestones", icon: Trophy },
+  { href: "/schedule", label: "Schedule", icon: Calendar },
   { href: "/documents", label: "Documents", icon: FileText },
   { href: "/my-financial-aid", label: "Financial Aid", icon: DollarSign },
+  { href: "/notifications", label: "Notifications", icon: Bell },
   { href: "/profile", label: "Profile", icon: User },
 ];
 

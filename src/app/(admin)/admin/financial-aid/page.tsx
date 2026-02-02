@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, FileText, Users, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DollarSign, FileText, Users, TrendingUp, Plus } from "lucide-react";
+import Link from "next/link";
 
 export const metadata = {
   title: "Financial Aid | Admin Dashboard",
@@ -135,11 +137,16 @@ export default async function FinancialAidPage() {
 
       {/* Financial Aid Records */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <FileText className="w-5 h-5" />
             Financial Aid Records
           </CardTitle>
+          <Link href="/admin/financial-aid/create">
+            <Button size="sm">
+              <Plus className="w-4 h-4 mr-1" /> Create Record
+            </Button>
+          </Link>
         </CardHeader>
         <CardContent>
           {records.length === 0 ? (
@@ -167,10 +174,12 @@ export default async function FinancialAidPage() {
                     return (
                       <tr key={record.id} className="border-b border-border hover:bg-muted/50">
                         <td className="py-3 px-4">
-                          <p className="font-medium text-foreground">
-                            {student?.first_name} {student?.last_name}
-                          </p>
-                          <p className="text-xs text-muted-foreground font-mono">{student?.student_number || "—"}</p>
+                          <Link href={`/admin/financial-aid/${record.id}`} className="block">
+                            <p className="font-medium text-foreground hover:text-brand-accent transition-colors">
+                              {student?.first_name} {student?.last_name}
+                            </p>
+                            <p className="text-xs text-muted-foreground font-mono">{student?.student_number || "—"}</p>
+                          </Link>
                         </td>
                         <td className="py-3 px-4 text-sm">{record.academic_year || "—"}</td>
                         <td className="py-3 px-4 text-sm">

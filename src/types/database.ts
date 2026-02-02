@@ -1283,6 +1283,117 @@ export interface Database {
           notes?: string | null;
         };
       };
+      announcements: {
+        Row: {
+          id: string;
+          title: string;
+          body: string;
+          priority: string;
+          campus_id: string | null;
+          target_audience: string;
+          published_at: string | null;
+          expires_at: string | null;
+          is_published: boolean;
+          created_by: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          body: string;
+          priority?: string;
+          campus_id?: string | null;
+          target_audience?: string;
+          published_at?: string | null;
+          expires_at?: string | null;
+          is_published?: boolean;
+          created_by: string;
+        };
+        Update: {
+          title?: string;
+          body?: string;
+          priority?: string;
+          campus_id?: string | null;
+          target_audience?: string;
+          published_at?: string | null;
+          expires_at?: string | null;
+          is_published?: boolean;
+        };
+      };
+      in_app_notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          body: string;
+          category: string;
+          priority: string;
+          link_url: string | null;
+          related_entity_type: string | null;
+          related_entity_id: string | null;
+          is_read: boolean;
+          read_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          title: string;
+          body: string;
+          category: string;
+          priority?: string;
+          link_url?: string | null;
+          related_entity_type?: string | null;
+          related_entity_id?: string | null;
+          is_read?: boolean;
+        };
+        Update: {
+          is_read?: boolean;
+          read_at?: string | null;
+        };
+      };
+      calendar_events: {
+        Row: {
+          id: string;
+          title: string;
+          description: string | null;
+          event_type: string;
+          campus_id: string | null;
+          start_date: string;
+          end_date: string | null;
+          all_day: boolean;
+          start_time: string | null;
+          end_time: string | null;
+          created_by: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description?: string | null;
+          event_type: string;
+          campus_id?: string | null;
+          start_date: string;
+          end_date?: string | null;
+          all_day?: boolean;
+          start_time?: string | null;
+          end_time?: string | null;
+          created_by: string;
+        };
+        Update: {
+          title?: string;
+          description?: string | null;
+          event_type?: string;
+          campus_id?: string | null;
+          start_date?: string;
+          end_date?: string | null;
+          all_day?: boolean;
+          start_time?: string | null;
+          end_time?: string | null;
+        };
+      };
       audit_log: {
         Row: {
           id: string;
@@ -1385,3 +1496,6 @@ export type StudentCompetency = Tables<"student_competencies">;
 export type SapConfiguration = Tables<"sap_configurations">;
 export type SapEvaluation = Tables<"sap_evaluations">;
 export type StudentMilestone = Tables<"student_milestones">;
+export type Announcement = Tables<"announcements">;
+export type InAppNotification = Tables<"in_app_notifications">;
+export type CalendarEvent = Tables<"calendar_events">;

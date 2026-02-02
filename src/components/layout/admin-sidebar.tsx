@@ -16,6 +16,8 @@ import {
   Menu,
   X,
   ChevronDown,
+  Megaphone,
+  Calendar,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { signOut } from "@/lib/actions/auth";
@@ -63,6 +65,18 @@ const navItems: NavItem[] = [
     label: "Financial Aid",
     icon: DollarSign,
     roles: ["superadmin", "campus_admin", "financial_aid"],
+  },
+  {
+    href: "/admin/announcements",
+    label: "Announcements",
+    icon: Megaphone,
+    roles: ["superadmin", "campus_admin"],
+  },
+  {
+    href: "/admin/scheduling",
+    label: "Scheduling",
+    icon: Calendar,
+    roles: ["superadmin", "campus_admin", "registrar"],
   },
   {
     href: "/admin/compliance",
