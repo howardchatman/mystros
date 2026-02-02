@@ -41,11 +41,11 @@ export function KPICard({
   const config = colorConfig[color];
 
   return (
-    <div className="rounded-xl border border-white/10 bg-brand-elevated/80 backdrop-blur-sm p-6">
+    <div className="rounded-xl border border-border bg-card backdrop-blur-sm p-6">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-brand-muted mb-1">{label}</p>
-          <p className="text-2xl font-bold text-brand-text">{value}</p>
+          <p className="text-sm text-muted-foreground mb-1">{label}</p>
+          <p className="text-2xl font-bold text-card-foreground">{value}</p>
 
           {trend && (
             <div className="flex items-center gap-1 mt-2">
@@ -58,7 +58,7 @@ export function KPICard({
                 {trend.isPositive ? "+" : "-"}
                 {Math.abs(trend.value)}%
               </span>
-              <span className="text-xs text-brand-muted">vs last week</span>
+              <span className="text-xs text-muted-foreground">vs last week</span>
             </div>
           )}
         </div>

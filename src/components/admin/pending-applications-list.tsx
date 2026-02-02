@@ -36,7 +36,7 @@ export function PendingApplicationsList({
       </CardHeader>
       <CardContent>
         {applications.length === 0 ? (
-          <p className="text-sm text-brand-muted text-center py-6">
+          <p className="text-sm text-muted-foreground text-center py-6">
             No pending applications
           </p>
         ) : (
@@ -44,7 +44,7 @@ export function PendingApplicationsList({
             {applications.map((app) => (
               <div
                 key={app.id}
-                className="flex items-center justify-between p-3 rounded-lg bg-brand-bg/50 hover:bg-brand-bg transition-colors"
+                className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-brand-accent/20 flex items-center justify-center">
@@ -54,10 +54,10 @@ export function PendingApplicationsList({
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-brand-text">
+                    <p className="text-sm font-medium text-foreground">
                       {app.first_name} {app.last_name}
                     </p>
-                    <div className="flex items-center gap-3 text-xs text-brand-muted">
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Mail className="w-3 h-3" />
                         {app.email}
@@ -73,10 +73,10 @@ export function PendingApplicationsList({
                 </div>
 
                 <div className="text-right">
-                  <p className="text-xs text-brand-muted">
+                  <p className="text-xs text-muted-foreground">
                     {Array.isArray(app.program) ? app.program[0]?.name : app.program?.name || "No program"}
                   </p>
-                  <p className="text-xs text-brand-muted">
+                  <p className="text-xs text-muted-foreground">
                     {format(parseISO(app.submitted_at), "MMM d, yyyy")}
                   </p>
                 </div>

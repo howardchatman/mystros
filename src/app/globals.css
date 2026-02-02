@@ -102,6 +102,50 @@
     --ring: 217 91% 50%;
   }
 
+  /* Admin content area - always light with white bg and muted cards */
+  .admin-content {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --card: 220 14% 96%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 217 91% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 213 52% 90%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 220 14% 92%;
+    --muted-foreground: 215 16% 40%;
+
+    --accent: 213 94% 95%;
+    --accent-foreground: 217 91% 50%;
+
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 87%;
+    --input: 220 13% 87%;
+    --ring: 217 91% 50%;
+
+    --brand-bg: 0 0% 100%;
+    --brand-elevated: 220 14% 96%;
+    --brand-primary: 213 52% 45%;
+    --brand-accent: 217 91% 50%;
+    --brand-accent2: 213 94% 58%;
+    --brand-ice: 213 92% 35%;
+    --brand-text: 222 47% 11%;
+    --brand-muted: 215 16% 40%;
+    --brand-gold: 43 74% 45%;
+
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
   * {
     @apply border-border;
   }

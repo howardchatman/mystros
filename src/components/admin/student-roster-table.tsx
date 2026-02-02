@@ -42,7 +42,7 @@ export function StudentRosterTable({ students, total }: StudentRosterTableProps)
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div>
           <CardTitle className="text-lg font-medium">Student Roster</CardTitle>
-          <p className="text-sm text-brand-muted">{total} total students</p>
+          <p className="text-sm text-muted-foreground">{total} total students</p>
         </div>
         <Link href="/admin/students">
           <Button variant="ghost" size="sm">
@@ -52,29 +52,29 @@ export function StudentRosterTable({ students, total }: StudentRosterTableProps)
       </CardHeader>
       <CardContent>
         {students.length === 0 ? (
-          <p className="text-sm text-brand-muted text-center py-6">
+          <p className="text-sm text-muted-foreground text-center py-6">
             No students found
           </p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left text-xs font-medium text-brand-muted uppercase tracking-wider py-3 px-2">
+                <tr className="border-b border-border">
+                  <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider py-3 px-2">
                     Student
                   </th>
-                  <th className="text-left text-xs font-medium text-brand-muted uppercase tracking-wider py-3 px-2">
+                  <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider py-3 px-2">
                     Program
                   </th>
-                  <th className="text-left text-xs font-medium text-brand-muted uppercase tracking-wider py-3 px-2">
+                  <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider py-3 px-2">
                     Status
                   </th>
-                  <th className="text-left text-xs font-medium text-brand-muted uppercase tracking-wider py-3 px-2">
+                  <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider py-3 px-2">
                     Progress
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-border">
                 {students.map((student) => {
                   const program = getRelation(student.program);
                   const campus = getRelation(student.campus);
@@ -85,23 +85,23 @@ export function StudentRosterTable({ students, total }: StudentRosterTableProps)
                   return (
                     <tr
                       key={student.id}
-                      className="hover:bg-white/5 transition-colors"
+                      className="hover:bg-muted/50 transition-colors"
                     >
                       <td className="py-3 px-2">
                         <div>
-                          <p className="text-sm font-medium text-brand-text">
+                          <p className="text-sm font-medium text-foreground">
                             {student.first_name} {student.last_name}
                           </p>
-                          <p className="text-xs text-brand-muted font-mono">
+                          <p className="text-xs text-muted-foreground font-mono">
                             {student.student_number}
                           </p>
                         </div>
                       </td>
                       <td className="py-3 px-2">
-                        <p className="text-sm text-brand-text">
+                        <p className="text-sm text-foreground">
                           {program?.name || "N/A"}
                         </p>
-                        <p className="text-xs text-brand-muted">
+                        <p className="text-xs text-muted-foreground">
                           {campus?.name || "N/A"}
                         </p>
                       </td>
@@ -118,14 +118,14 @@ export function StudentRosterTable({ students, total }: StudentRosterTableProps)
                       <td className="py-3 px-2">
                         <div className="w-full max-w-[120px]">
                           <div className="flex justify-between text-xs mb-1">
-                            <span className="text-brand-muted">
+                            <span className="text-muted-foreground">
                               {student.total_hours_completed.toFixed(0)} hrs
                             </span>
-                            <span className="text-brand-text">
+                            <span className="text-foreground">
                               {progress.toFixed(0)}%
                             </span>
                           </div>
-                          <div className="h-1.5 bg-brand-bg rounded-full overflow-hidden">
+                          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                             <div
                               className="h-full bg-brand-accent rounded-full"
                               style={{ width: `${Math.min(progress, 100)}%` }}

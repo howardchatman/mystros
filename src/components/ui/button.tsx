@@ -14,11 +14,11 @@ const buttonVariants = cva(
         primary:
           "bg-gradient-to-r from-brand-accent to-brand-accent2 text-white shadow-md hover:shadow-lg hover:shadow-brand-accent/25 active:scale-[0.98]",
         secondary:
-          "bg-brand-elevated text-brand-text border border-white/10 hover:bg-white/10 hover:border-white/20",
+          "bg-card text-foreground border border-border hover:bg-muted hover:border-border",
         outline:
-          "border border-brand-accent/50 bg-transparent text-brand-accent hover:bg-brand-accent/10 hover:border-brand-accent",
+          "border border-primary/50 bg-transparent text-primary hover:bg-primary/10 hover:border-primary",
         ghost:
-          "text-brand-muted hover:text-brand-text hover:bg-white/5",
+          "text-muted-foreground hover:text-foreground hover:bg-muted/50",
         destructive:
           "bg-red-600 text-white hover:bg-red-700",
         link:
