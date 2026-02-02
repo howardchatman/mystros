@@ -75,7 +75,9 @@ export async function signIn(
 
   // Determine redirect based on role
   const redirectTo =
-    profile?.role && adminRoles.includes(profile.role)
+    profile?.role === "instructor"
+      ? "/instructor/dashboard"
+      : profile?.role && adminRoles.includes(profile.role)
       ? "/admin/dashboard"
       : "/dashboard";
 
@@ -308,4 +310,35 @@ export async function isAdmin(): Promise<boolean> {
  */
 export async function isStudent(): Promise<boolean> {
   return hasRole(["student"]);
+}
+
+/**
+ * Update the current user's profile (phone, name)
+ */
+export async function updateProfile(data: {
+  phone?: string;
+  first_name?: string;
+  last_name?: string;
+}): Promise<AuthResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Not authenticated" };
+
+  const updateData: Record<string, string | null> = {};
+  if (data.phone !== undefined) updateData["phone"] = data.phone || null;
+  if (data.first_name !== undefined) updateData["first_name"] = data.first_name;
+  if (data.last_name !== undefined) updateData["last_name"] = data.last_name;
+
+  const { error } = await supabase
+    .from("user_profiles")
+    .update(updateData)
+    .eq("id", user.id);
+
+  if (error) return { success: false, error: error.message };
+
+  revalidatePath("/admin/profile");
+  revalidatePath("/profile");
+  return { success: true };
 }

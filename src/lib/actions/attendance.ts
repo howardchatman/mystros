@@ -71,6 +71,7 @@ export async function clockIn(studentId: string, campusId: string) {
   }).catch(() => {});
 
   revalidatePath("/admin/attendance");
+  revalidatePath("/instructor/attendance");
   return { data };
 }
 
@@ -118,6 +119,7 @@ export async function bulkClockIn(studentIds: string[], campusId: string) {
   }
 
   revalidatePath("/admin/attendance");
+  revalidatePath("/instructor/attendance");
   return { inserted: toInsert.length, skipped: alreadyIn.size };
 }
 
@@ -238,6 +240,7 @@ export async function clockOut(
   }).catch(() => {});
 
   revalidatePath("/admin/attendance");
+  revalidatePath("/instructor/attendance");
   return { data: { actualHours, theoryHours, practicalHours } };
 }
 
@@ -310,6 +313,7 @@ export async function bulkMarkAbsent(
   }
 
   revalidatePath("/admin/attendance");
+  revalidatePath("/instructor/attendance");
   return { success: true, count: studentIds.length };
 }
 
@@ -428,6 +432,7 @@ export async function requestAttendanceCorrection(data: {
   }
 
   revalidatePath("/admin/attendance");
+  revalidatePath("/instructor/attendance");
   return { success: true };
 }
 
@@ -450,6 +455,7 @@ export async function approveAttendanceCorrection(
 
     if (error) return { error: error.message };
     revalidatePath("/admin/attendance");
+  revalidatePath("/instructor/attendance");
     return { success: true };
   }
 
@@ -534,6 +540,7 @@ export async function approveAttendanceCorrection(
   }
 
   revalidatePath("/admin/attendance");
+  revalidatePath("/instructor/attendance");
   return { success: true };
 }
 

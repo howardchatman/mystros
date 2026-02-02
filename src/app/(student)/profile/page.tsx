@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { User, Mail, Phone, MapPin, GraduationCap, Calendar, Clock } from "lucide-react";
+import { ProfileEditForm } from "./profile-edit-form";
 
 export const metadata = {
   title: "Profile | Student Portal",
@@ -172,6 +173,9 @@ export default async function ProfilePage() {
           </CardContent>
         </Card>
       )}
+
+      {/* Edit Profile */}
+      <ProfileEditForm currentPhone={user.phone || ""} />
 
       {!student && (
         <Card>

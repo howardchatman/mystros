@@ -84,6 +84,7 @@ export async function markCompetencyComplete(
   }
 
   revalidatePath(`/admin/students/${studentId}`);
+  revalidatePath("/instructor/competencies");
   return { success: true };
 }
 
@@ -111,6 +112,7 @@ export async function unmarkCompetency(
   }
 
   revalidatePath(`/admin/students/${studentId}`);
+  revalidatePath("/instructor/competencies");
   return { success: true };
 }
 

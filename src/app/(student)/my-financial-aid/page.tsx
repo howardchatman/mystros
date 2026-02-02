@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/actions/auth";
 import { createClient } from "@/lib/supabase/server";
+import { isStripeEnabled } from "@/lib/stripe";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, FileText, CheckCircle, Clock, AlertCircle } from "lucide-react";
+import { MakePaymentButton } from "./make-payment-button";
 
 export const metadata = {
   title: "Financial Aid | Student Portal",
@@ -94,6 +96,8 @@ export default async function StudentFinancialAidPage() {
   const totalAwarded = (awards || []).reduce((sum, a) => sum + (a.amount || 0), 0);
   const totalDisbursed = (disbursements || []).filter((d) => d.status === "disbursed").reduce((sum, d) => sum + (d.amount || 0), 0);
 
+  const stripeEnabled = isStripeEnabled();
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -106,10 +110,17 @@ export default async function StudentFinancialAidPage() {
       {account && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5" />
-              Account Summary
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign className="w-5 h-5" />
+                Account Summary
+              </CardTitle>
+              <MakePaymentButton
+                studentId={student.id}
+                currentBalance={Number(account.current_balance || 0)}
+                stripeEnabled={stripeEnabled}
+              />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

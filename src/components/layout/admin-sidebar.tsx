@@ -19,6 +19,7 @@ import {
   Megaphone,
   Calendar,
   Upload,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { signOut } from "@/lib/actions/auth";
@@ -267,8 +268,21 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
             })}
           </nav>
 
-          {/* Footer with sign out */}
-          <div className="p-4 border-t border-[hsl(213,52%,20%)] space-y-2">
+          {/* Footer with profile and sign out */}
+          <div className="p-4 border-t border-[hsl(213,52%,20%)] space-y-1">
+            <Link
+              href="/admin/profile"
+              onClick={() => setIsMobileOpen(false)}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 w-full rounded-lg text-sm font-medium transition-colors",
+                pathname === "/admin/profile"
+                  ? "bg-amber-500/20 text-amber-400"
+                  : "text-[hsl(215,16%,47%)] hover:text-[hsl(210,40%,98%)] hover:bg-white/5"
+              )}
+            >
+              <User className="w-5 h-5" />
+              Profile
+            </Link>
             <button
               onClick={handleSignOut}
               className="flex items-center gap-3 px-3 py-2.5 w-full rounded-lg text-sm font-medium text-[hsl(215,16%,47%)] hover:text-red-400 hover:bg-red-500/10 transition-colors"

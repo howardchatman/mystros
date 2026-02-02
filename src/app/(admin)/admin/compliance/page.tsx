@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ShieldCheck, FileText, Users, AlertCircle, CheckCircle } from "lucide-react";
+import { getPendingDocuments } from "@/lib/actions/document-review";
+import { DocumentReviewQueue } from "./document-review-queue";
 
 export const metadata = {
   title: "Compliance | Admin Dashboard",
@@ -11,6 +13,7 @@ export const metadata = {
 
 export default async function CompliancePage() {
   const supabase = await createClient();
+  const pendingDocs = await getPendingDocuments();
 
   // Get all active students with document counts
   const { data: students } = await supabase
@@ -136,6 +139,9 @@ export default async function CompliancePage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Document Review Queue */}
+      <DocumentReviewQueue documents={pendingDocs} />
 
       {/* Required Documents */}
       <Card>
