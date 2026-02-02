@@ -20,6 +20,7 @@ import {
   Calendar,
   Upload,
   User,
+  ClipboardCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { signOut } from "@/lib/actions/auth";
@@ -81,9 +82,21 @@ const navItems: NavItem[] = [
     roles: ["superadmin", "campus_admin", "registrar"],
   },
   {
+    href: "/admin/auditor/students",
+    label: "Student Records",
+    icon: User,
+    roles: ["auditor"],
+  },
+  {
     href: "/admin/compliance",
     label: "Compliance",
     icon: ShieldCheck,
+    roles: ["superadmin", "campus_admin", "auditor"],
+  },
+  {
+    href: "/admin/audit-readiness",
+    label: "Audit Readiness",
+    icon: ClipboardCheck,
     roles: ["superadmin", "campus_admin", "auditor"],
   },
   {

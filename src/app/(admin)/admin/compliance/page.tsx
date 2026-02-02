@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ShieldCheck, FileText, Users, AlertCircle, CheckCircle } from "lucide-react";
+import { ShieldCheck, FileText, Users, AlertCircle, CheckCircle, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { getPendingDocuments } from "@/lib/actions/document-review";
 import { getAuditLogs } from "@/lib/actions/audit";
 import { DocumentReviewQueue } from "./document-review-queue";
@@ -76,9 +77,17 @@ export default async function CompliancePage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-display font-bold text-foreground">Compliance</h1>
-        <p className="text-muted-foreground">Monitor regulatory compliance and document status</p>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="text-2xl font-display font-bold text-foreground">Compliance</h1>
+          <p className="text-muted-foreground">Monitor regulatory compliance and document status</p>
+        </div>
+        <Link
+          href="/admin/audit-readiness"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent hover:underline"
+        >
+          Audit Readiness Dashboard <ArrowRight className="w-4 h-4" />
+        </Link>
       </div>
 
       {/* Summary Cards */}
