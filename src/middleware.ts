@@ -14,6 +14,11 @@ const publicRoutes = [
   "/admissions",
   "/about",
   "/financial-aid",
+  "/privacy",
+  "/terms",
+  "/consumer-disclosures",
+  "/student-resources",
+  "/community",
 ];
 
 // Routes that require admin roles

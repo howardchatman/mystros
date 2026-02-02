@@ -510,3 +510,59 @@ export async function bulkUpdateStudentStatus(
   revalidatePath("/admin/students");
   return { success: true, count: studentIds.length };
 }
+
+/**
+ * Get a single lead by ID
+ */
+export async function getLeadById(leadId: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("leads")
+    .select(`
+      *,
+      campus:campuses(id, name, code),
+      program:programs(id, name, code),
+      assigned_user:user_profiles!assigned_to(first_name, last_name, email)
+    `)
+    .eq("id", leadId)
+    .single();
+
+  if (error) return { lead: null, error: error.message };
+  return { lead: data };
+}
+
+/**
+ * Update lead status
+ */
+export async function updateLeadStatus(
+  leadId: string,
+  status: string,
+  notes?: string
+) {
+  const supabase = await createClient();
+
+  const updateData: Record<string, unknown> = {
+    status,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (notes) {
+    updateData["notes"] = notes;
+  }
+
+  if (status === "applicant") {
+    updateData["converted_at"] = new Date().toISOString();
+  }
+
+  const { error } = await supabase
+    .from("leads")
+    .update(updateData)
+    .eq("id", leadId);
+
+  if (error) return { success: false, error: error.message };
+
+  revalidatePath("/admin/admissions/leads");
+  revalidatePath(`/admin/admissions/leads/${leadId}`);
+  return { success: true };
+}

@@ -5,6 +5,8 @@ import { StudentOverview } from "./student-overview";
 import { StudentAttendanceSection } from "./student-attendance-section";
 import { StudentSapSection } from "./student-sap-section";
 import { StudentCompetenciesSection } from "./student-competencies-section";
+import { StudentDocumentsSection } from "./student-documents-section";
+import { StudentFinancialSection } from "./student-financial-section";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -12,9 +14,13 @@ import { ArrowLeft } from "lucide-react";
 interface StudentDetailClientProps {
   student: any;
   sapHistory: any[];
+  documents: any[];
+  account: any;
+  aidRecords: any[];
+  disbursements: any[];
 }
 
-export function StudentDetailClient({ student, sapHistory }: StudentDetailClientProps) {
+export function StudentDetailClient({ student, sapHistory, documents, account, aidRecords, disbursements }: StudentDetailClientProps) {
   const program = student.program
     ? Array.isArray(student.program)
       ? student.program[0]
@@ -47,6 +53,8 @@ export function StudentDetailClient({ student, sapHistory }: StudentDetailClient
           <TabsTrigger value="attendance">Attendance</TabsTrigger>
           <TabsTrigger value="sap">SAP</TabsTrigger>
           <TabsTrigger value="competencies">Competencies</TabsTrigger>
+          <TabsTrigger value="documents">Documents</TabsTrigger>
+          <TabsTrigger value="financial">Financial</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -75,6 +83,18 @@ export function StudentDetailClient({ student, sapHistory }: StudentDetailClient
           <StudentCompetenciesSection
             studentId={student.id}
             programId={program?.id}
+          />
+        </TabsContent>
+
+        <TabsContent value="documents">
+          <StudentDocumentsSection documents={documents} />
+        </TabsContent>
+
+        <TabsContent value="financial">
+          <StudentFinancialSection
+            account={account}
+            aidRecords={aidRecords}
+            disbursements={disbursements}
           />
         </TabsContent>
       </Tabs>

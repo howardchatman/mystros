@@ -128,9 +128,11 @@ async function LeadsTable({ searchParams }: { searchParams: PageProps["searchPar
                     {getStatusBadge(lead.status)}
                   </td>
                   <td className="py-3 px-4 text-right">
-                    <Button variant="ghost" size="sm">
-                      View <ChevronRight className="w-4 h-4 ml-1" />
-                    </Button>
+                    <Link href={`/admin/admissions/leads/${lead.id}`}>
+                      <Button variant="ghost" size="sm">
+                        View <ChevronRight className="w-4 h-4 ml-1" />
+                      </Button>
+                    </Link>
                   </td>
                 </tr>
               );
