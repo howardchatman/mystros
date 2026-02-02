@@ -2,6 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { logAudit } from "@/lib/actions/audit";
+import { sendApplicationStatusEmail, sendSapAlertEmail, sendDisbursementEmail } from "@/lib/actions/email";
 
 // ─── Announcements ──────────────────────────────────────────────
 
@@ -29,6 +31,7 @@ export async function createAnnouncement(data: {
     .single();
 
   if (error) return { error: error.message };
+  logAudit({ table_name: "announcements", record_id: announcement.id, action: "create", new_data: data as Record<string, unknown> }).catch(() => {});
   revalidatePath("/admin/announcements");
   return { data: announcement };
 }
@@ -82,6 +85,7 @@ export async function publishAnnouncement(id: string) {
     }
   }
 
+  logAudit({ table_name: "announcements", record_id: id, action: "status_change", new_data: { is_published: true } }).catch(() => {});
   revalidatePath("/admin/announcements");
   return { data: announcement };
 }
@@ -113,6 +117,7 @@ export async function deleteAnnouncement(id: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("announcements").delete().eq("id", id);
   if (error) return { error: error.message };
+  logAudit({ table_name: "announcements", record_id: id, action: "delete" }).catch(() => {});
   revalidatePath("/admin/announcements");
   return { success: true };
 }
@@ -233,6 +238,9 @@ export async function notifySapAlert(
     related_entity_type: "sap_evaluation",
     related_entity_id: studentId,
   });
+
+  // Send email for SAP alerts
+  sendSapAlertEmail(studentId, status).catch(() => {});
 }
 
 export async function notifyMilestoneAchieved(
@@ -298,6 +306,11 @@ export async function notifyApplicationStatus(
     related_entity_type: "application",
     related_entity_id: null,
   });
+
+  // Send email for accepted/denied (not enrolled — that's a separate flow)
+  if (status === "accepted" || status === "denied") {
+    sendApplicationStatusEmail(userId, status as "accepted" | "denied").catch(() => {});
+  }
 }
 
 export async function notifyDisbursementUpdate(
@@ -330,4 +343,9 @@ export async function notifyDisbursementUpdate(
     related_entity_type: "disbursement",
     related_entity_id: studentId,
   });
+
+  // Send email for released disbursements
+  if (status === "released") {
+    sendDisbursementEmail(studentId, 0, new Date().toLocaleDateString()).catch(() => {});
+  }
 }

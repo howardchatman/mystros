@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { SapStatus } from "@/types/database";
 import { notifySapAlert } from "@/lib/actions/notifications";
+import { logAudit } from "@/lib/actions/audit";
 
 // ─── Check if SAP Evaluation is Due ───────────────────────
 
@@ -186,6 +187,13 @@ export async function calculateSap(studentId: string) {
     .from("students")
     .update({ current_sap_status: newStatus })
     .eq("id", studentId);
+
+  logAudit({
+    table_name: "sap_evaluations",
+    record_id: evaluation.id,
+    action: "create",
+    new_data: { student_id: studentId, status: newStatus, previous_status: previousStatus, completion_rate: completionRate },
+  }).catch(() => {});
 
   // Notify student of SAP status change
   if (newStatus !== previousStatus) {

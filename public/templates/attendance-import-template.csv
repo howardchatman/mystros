@@ -1,0 +1,4 @@
+student_number,date,clock_in,clock_out,hours,type
+MBA25001,2025-02-01,08:00,16:00,8,
+MBA25001,2025-02-02,08:00,12:00,4,theory
+MBA25002,2025-02-01,09:00,17:00,8,practical

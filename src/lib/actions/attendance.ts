@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { logAudit } from "@/lib/actions/audit";
 
 // ─── Helpers ───────────────────────────────────────────────
 
@@ -61,6 +62,13 @@ export async function clockIn(studentId: string, campusId: string) {
     console.error("[clockIn] error:", error.message);
     return { error: error.message };
   }
+
+  logAudit({
+    table_name: "attendance_records",
+    record_id: data.id,
+    action: "create",
+    new_data: { student_id: studentId, campus_id: campusId, date: today },
+  }).catch(() => {});
 
   revalidatePath("/admin/attendance");
   return { data };
@@ -222,6 +230,13 @@ export async function clockOut(
     );
   }
 
+  logAudit({
+    table_name: "attendance_records",
+    record_id: recordId,
+    action: "update",
+    new_data: { actual_hours: actualHours, theory_hours: theoryHours, practical_hours: practicalHours },
+  }).catch(() => {});
+
   revalidatePath("/admin/attendance");
   return { data: { actualHours, theoryHours, practicalHours } };
 }
@@ -284,6 +299,15 @@ export async function bulkMarkAbsent(
 
   const { error } = await supabase.from("attendance_records").insert(records);
   if (error) return { error: error.message };
+
+  for (const id of studentIds) {
+    logAudit({
+      table_name: "attendance_records",
+      record_id: id,
+      action: "create",
+      new_data: { student_id: id, status: "absent", date: attendanceDate },
+    }).catch(() => {});
+  }
 
   revalidatePath("/admin/attendance");
   return { success: true, count: studentIds.length };
@@ -488,6 +512,14 @@ export async function approveAttendanceCorrection(
     .eq("id", recordId);
 
   if (updateError) return { error: updateError.message };
+
+  logAudit({
+    table_name: "attendance_records",
+    record_id: recordId,
+    action: "update",
+    old_data: { status: "pending_approval" },
+    new_data: { status: "present", approved: true, actual_hours: actualHours },
+  }).catch(() => {});
 
   // Update student totals
   if (student) {

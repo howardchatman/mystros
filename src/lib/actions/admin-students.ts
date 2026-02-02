@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { StudentStatus } from "@/types/database";
 import { notifyApplicationStatus } from "@/lib/actions/notifications";
+import { logAudit } from "@/lib/actions/audit";
 
 export interface StudentFilters {
   status?: StudentStatus;
@@ -130,6 +131,13 @@ export async function updateStudentStatus(
 ) {
   const supabase = await createClient();
 
+  // Fetch old status for audit
+  const { data: oldRecord } = await supabase
+    .from("students")
+    .select("status")
+    .eq("id", studentId)
+    .single();
+
   const updateData: Record<string, unknown> = {
     status,
     updated_at: new Date().toISOString(),
@@ -151,6 +159,14 @@ export async function updateStudentStatus(
     console.error("Error updating student status:", error);
     return { success: false, error: error.message };
   }
+
+  logAudit({
+    table_name: "students",
+    record_id: studentId,
+    action: "status_change",
+    old_data: { status: oldRecord?.status },
+    new_data: { status },
+  }).catch(() => {});
 
   revalidatePath("/admin/students");
   revalidatePath(`/admin/students/${studentId}`);
@@ -276,6 +292,13 @@ export async function reviewApplication(
     return { success: false, error: error.message };
   }
 
+  logAudit({
+    table_name: "applications",
+    record_id: applicationId,
+    action: "status_change",
+    new_data: { status: decision, reason },
+  }).catch(() => {});
+
   // Send notification to applicant if they have a user_id
   const { data: app } = await supabase
     .from("applications")
@@ -370,6 +393,13 @@ export async function enrollStudent(applicationId: string, startDate: string) {
     total_aid_posted: 0,
     current_balance: 0,
   });
+
+  logAudit({
+    table_name: "students",
+    record_id: student.id,
+    action: "create",
+    new_data: { student_number: studentNumber, application_id: applicationId, start_date: startDate },
+  }).catch(() => {});
 
   // Send enrollment notification
   if (application.user_id) {
@@ -507,6 +537,15 @@ export async function bulkUpdateStudentStatus(
 
   if (error) return { success: false, error: error.message };
 
+  for (const id of studentIds) {
+    logAudit({
+      table_name: "students",
+      record_id: id,
+      action: "status_change",
+      new_data: { status },
+    }).catch(() => {});
+  }
+
   revalidatePath("/admin/students");
   return { success: true, count: studentIds.length };
 }
@@ -561,6 +600,13 @@ export async function updateLeadStatus(
     .eq("id", leadId);
 
   if (error) return { success: false, error: error.message };
+
+  logAudit({
+    table_name: "leads",
+    record_id: leadId,
+    action: "status_change",
+    new_data: { status, notes },
+  }).catch(() => {});
 
   revalidatePath("/admin/admissions/leads");
   revalidatePath(`/admin/admissions/leads/${leadId}`);

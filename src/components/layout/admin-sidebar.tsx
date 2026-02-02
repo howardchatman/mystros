@@ -18,6 +18,7 @@ import {
   ChevronDown,
   Megaphone,
   Calendar,
+  Upload,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { signOut } from "@/lib/actions/auth";
@@ -89,6 +90,12 @@ const navItems: NavItem[] = [
     label: "Reports",
     icon: FileText,
     roles: ["superadmin", "campus_admin", "registrar", "auditor"],
+  },
+  {
+    href: "/admin/import",
+    label: "Import Data",
+    icon: Upload,
+    roles: ["superadmin", "campus_admin", "registrar"],
   },
   {
     href: "/admin/settings",

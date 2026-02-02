@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { Database } from "@/types/database";
+import { logAudit } from "@/lib/actions/audit";
 
 type CampusInsert = Database["public"]["Tables"]["campuses"]["Insert"];
 type CampusUpdate = Database["public"]["Tables"]["campuses"]["Update"];
@@ -25,6 +26,7 @@ export async function createCampus(data: Omit<CampusInsert, "id" | "created_at" 
     .select()
     .single();
   if (error) return { error: error.message };
+  logAudit({ table_name: "campuses", record_id: campus.id, action: "create", new_data: data as Record<string, unknown> }).catch(() => {});
   revalidatePath(SETTINGS_PATH);
   return { data: campus };
 }
@@ -38,6 +40,7 @@ export async function updateCampus(id: string, updates: CampusUpdate) {
     .select()
     .single();
   if (error) return { error: error.message };
+  logAudit({ table_name: "campuses", record_id: id, action: "update", new_data: updates as Record<string, unknown> }).catch(() => {});
   revalidatePath(SETTINGS_PATH);
   return { data: campus };
 }
@@ -56,6 +59,7 @@ export async function createProgram(data: Omit<ProgramInsert, "id" | "created_at
     .select()
     .single();
   if (error) return { error: error.message };
+  logAudit({ table_name: "programs", record_id: program.id, action: "create", new_data: data as Record<string, unknown> }).catch(() => {});
   revalidatePath(SETTINGS_PATH);
   return { data: program };
 }
@@ -69,6 +73,7 @@ export async function updateProgram(id: string, updates: ProgramUpdate) {
     .select()
     .single();
   if (error) return { error: error.message };
+  logAudit({ table_name: "programs", record_id: id, action: "update", new_data: updates as Record<string, unknown> }).catch(() => {});
   revalidatePath(SETTINGS_PATH);
   return { data: program };
 }
@@ -87,6 +92,7 @@ export async function createProgramSchedule(data: Omit<ScheduleInsert, "id" | "c
     .select()
     .single();
   if (error) return { error: error.message };
+  logAudit({ table_name: "program_schedules", record_id: schedule.id, action: "create", new_data: data as Record<string, unknown> }).catch(() => {});
   revalidatePath(SETTINGS_PATH);
   return { data: schedule };
 }
@@ -100,6 +106,7 @@ export async function updateProgramSchedule(id: string, updates: ScheduleUpdate)
     .select()
     .single();
   if (error) return { error: error.message };
+  logAudit({ table_name: "program_schedules", record_id: id, action: "update", new_data: updates as Record<string, unknown> }).catch(() => {});
   revalidatePath(SETTINGS_PATH);
   return { data: schedule };
 }
@@ -118,6 +125,7 @@ export async function createDocumentType(data: Omit<DocTypeInsert, "id" | "creat
     .select()
     .single();
   if (error) return { error: error.message };
+  logAudit({ table_name: "document_types", record_id: docType.id, action: "create", new_data: data as Record<string, unknown> }).catch(() => {});
   revalidatePath(SETTINGS_PATH);
   return { data: docType };
 }
@@ -131,6 +139,7 @@ export async function updateDocumentType(id: string, updates: DocTypeUpdate) {
     .select()
     .single();
   if (error) return { error: error.message };
+  logAudit({ table_name: "document_types", record_id: id, action: "update", new_data: updates as Record<string, unknown> }).catch(() => {});
   revalidatePath(SETTINGS_PATH);
   return { data: docType };
 }

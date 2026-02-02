@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { Database } from "@/types/database";
 import { notifyDisbursementUpdate } from "@/lib/actions/notifications";
+import { logAudit } from "@/lib/actions/audit";
 
 type AidRecordInsert = Database["public"]["Tables"]["financial_aid_records"]["Insert"];
 type AidRecordUpdate = Database["public"]["Tables"]["financial_aid_records"]["Update"];
@@ -26,6 +27,7 @@ export async function createFinancialAidRecord(
     .single();
 
   if (error) return { error: error.message };
+  logAudit({ table_name: "financial_aid_records", record_id: record.id, action: "create", new_data: data as Record<string, unknown> }).catch(() => {});
   revalidatePath("/admin/financial-aid");
   return { data: record };
 }
@@ -201,6 +203,8 @@ export async function releaseDisbursement(id: string) {
 
   if (error) return { error: error.message };
 
+  logAudit({ table_name: "disbursements", record_id: id, action: "status_change", new_data: { status: "released" } }).catch(() => {});
+
   // Post the disbursement amount as a payment to the student account
   if (data) {
     const { data: account } = await supabase
@@ -270,6 +274,7 @@ export async function recordCharge(
     .single();
 
   if (error) return { error: error.message };
+  logAudit({ table_name: "charges", record_id: charge.id, action: "create", new_data: data as Record<string, unknown> }).catch(() => {});
   await recalculateAccountBalance(data.student_account_id);
   revalidatePath("/admin/financial-aid");
   return { data: charge };
@@ -294,6 +299,7 @@ export async function voidCharge(id: string, reason: string) {
     .single();
 
   if (error) return { error: error.message };
+  logAudit({ table_name: "charges", record_id: id, action: "update", new_data: { is_voided: true, reason } }).catch(() => {});
   if (charge) {
     await recalculateAccountBalance(charge.student_account_id);
   }
@@ -318,6 +324,7 @@ export async function recordPayment(
     .single();
 
   if (error) return { error: error.message };
+  logAudit({ table_name: "payments", record_id: payment.id, action: "create", new_data: data as Record<string, unknown> }).catch(() => {});
   await recalculateAccountBalance(data.student_account_id);
   revalidatePath("/admin/financial-aid");
   return { data: payment };
