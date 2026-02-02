@@ -1,10 +1,12 @@
 import { cn } from "@/lib/utils/cn";
 import { LucideIcon } from "lucide-react";
+import Link from "next/link";
 
 interface KPICardProps {
   label: string;
   value: string | number;
   icon: LucideIcon;
+  href?: string;
   trend?: {
     value: number;
     isPositive: boolean;
@@ -35,13 +37,17 @@ export function KPICard({
   label,
   value,
   icon: Icon,
+  href,
   trend,
   color = "default",
 }: KPICardProps) {
   const config = colorConfig[color];
 
-  return (
-    <div className="rounded-xl border border-border bg-card backdrop-blur-sm p-6">
+  const content = (
+    <div className={cn(
+      "rounded-xl border border-border bg-card backdrop-blur-sm p-6 transition-colors",
+      href && "cursor-pointer hover:bg-muted/50"
+    )}>
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-muted-foreground mb-1">{label}</p>
@@ -69,4 +75,10 @@ export function KPICard({
       </div>
     </div>
   );
+
+  if (href) {
+    return <Link href={href}>{content}</Link>;
+  }
+
+  return content;
 }
