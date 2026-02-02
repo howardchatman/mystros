@@ -378,6 +378,58 @@ export async function searchStudentsForAid(query: string) {
   return data || [];
 }
 
+export async function batchReleaseDisbursements(ids: string[]) {
+  if (ids.length === 0) return { error: "No disbursements selected" };
+
+  const supabase = await createClient();
+  let released = 0;
+  const errors: string[] = [];
+
+  for (const id of ids) {
+    const { data: disb, error: fetchErr } = await supabase
+      .from("disbursements")
+      .select("*, student:students(id, user_id), award:financial_aid_awards(student_id)")
+      .eq("id", id)
+      .single();
+
+    if (fetchErr || !disb) {
+      errors.push(`${id}: not found`);
+      continue;
+    }
+
+    const { error: updateErr } = await supabase
+      .from("disbursements")
+      .update({
+        status: "disbursed",
+        actual_disbursement_date: new Date().toISOString().split("T")[0],
+      })
+      .eq("id", id);
+
+    if (updateErr) {
+      errors.push(`${id}: ${updateErr.message}`);
+      continue;
+    }
+
+    released++;
+
+    // Notify student
+    const student = disb.student as { id: string; user_id?: string } | null;
+    if (student?.id) {
+      try {
+        await notifyDisbursementUpdate(student.id, "released");
+      } catch {
+        // non-fatal
+      }
+    }
+  }
+
+  revalidatePath("/admin/financial-aid");
+  if (errors.length > 0) {
+    return { error: `Released ${released}, failed ${errors.length}` };
+  }
+  return { success: true, count: released };
+}
+
 export async function ensureStudentAccount(studentId: string) {
   const supabase = await createClient();
   const { data: existing } = await supabase

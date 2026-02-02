@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import type { StudentStatus } from "@/types/database";
+import { notifyApplicationStatus } from "@/lib/actions/notifications";
 
 export interface StudentFilters {
   status?: StudentStatus;
@@ -275,6 +276,16 @@ export async function reviewApplication(
     return { success: false, error: error.message };
   }
 
+  // Send notification to applicant if they have a user_id
+  const { data: app } = await supabase
+    .from("applications")
+    .select("user_id")
+    .eq("id", applicationId)
+    .single();
+  if (app?.user_id) {
+    await notifyApplicationStatus(app.user_id, decision);
+  }
+
   revalidatePath("/admin/admissions/applications");
   revalidatePath(`/admin/admissions/applications/${applicationId}`);
   return { success: true };
@@ -359,6 +370,11 @@ export async function enrollStudent(applicationId: string, startDate: string) {
     total_aid_posted: 0,
     current_balance: 0,
   });
+
+  // Send enrollment notification
+  if (application.user_id) {
+    await notifyApplicationStatus(application.user_id, "enrolled");
+  }
 
   revalidatePath("/admin/students");
   revalidatePath("/admin/admissions/applications");
@@ -460,4 +476,37 @@ export async function getPrograms() {
   }
 
   return { programs: data || [] };
+}
+
+/**
+ * Bulk update student status
+ */
+export async function bulkUpdateStudentStatus(
+  studentIds: string[],
+  status: StudentStatus
+) {
+  if (studentIds.length === 0) return { success: false, error: "No students selected" };
+
+  const supabase = await createClient();
+
+  const updateData: Record<string, unknown> = {
+    status,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (status === "withdrawn") {
+    updateData["withdrawal_date"] = new Date().toISOString().split("T")[0];
+  } else if (status === "graduated") {
+    updateData["actual_graduation_date"] = new Date().toISOString().split("T")[0];
+  }
+
+  const { error } = await supabase
+    .from("students")
+    .update(updateData)
+    .in("id", studentIds);
+
+  if (error) return { success: false, error: error.message };
+
+  revalidatePath("/admin/students");
+  return { success: true, count: studentIds.length };
 }

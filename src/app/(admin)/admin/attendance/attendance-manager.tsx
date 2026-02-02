@@ -7,6 +7,7 @@ import { ClockInForm } from "./clock-in-form";
 import { ActiveSessions } from "./active-sessions";
 import { AttendanceTable } from "./attendance-table";
 import { CorrectionRequests } from "./correction-requests";
+import { BulkAttendance } from "./bulk-attendance";
 
 interface AttendanceManagerProps {
   campuses: { id: string; name: string }[];
@@ -63,6 +64,9 @@ export function AttendanceManager({
           {canManageCorrections && (
             <TabsTrigger value="corrections">Corrections</TabsTrigger>
           )}
+          {canManageCorrections && (
+            <TabsTrigger value="bulk">Bulk</TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="clock" className="space-y-6">
@@ -77,6 +81,12 @@ export function AttendanceManager({
         {canManageCorrections && (
           <TabsContent value="corrections">
             <CorrectionRequests onAction={handleRefresh} />
+          </TabsContent>
+        )}
+
+        {canManageCorrections && (
+          <TabsContent value="bulk">
+            <BulkAttendance campusId={campusId} />
           </TabsContent>
         )}
       </Tabs>

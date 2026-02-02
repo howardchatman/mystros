@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Users, Search, Filter, Plus, ChevronRight } from "lucide-react";
 import { StudentFilters } from "./student-filters";
+import { BulkStatusUpdate } from "./bulk-status-update";
 
 export const metadata = {
   title: "Students | Admin Dashboard",
@@ -236,6 +237,9 @@ export default async function StudentsPage({ searchParams }: PageProps) {
           </Suspense>
         </CardContent>
       </Card>
+
+      {/* Bulk Status Update */}
+      <BulkStatusUpdate />
     </div>
   );
 }

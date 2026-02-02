@@ -261,6 +261,45 @@ export async function notifyMilestoneAchieved(
   });
 }
 
+export async function notifyApplicationStatus(
+  userId: string,
+  status: string
+) {
+  const supabase = await createClient();
+
+  const statusMessages: Record<string, { title: string; body: string; priority: string }> = {
+    accepted: {
+      title: "Application Accepted!",
+      body: "Your application has been accepted. Next steps will be provided soon.",
+      priority: "high",
+    },
+    denied: {
+      title: "Application Update",
+      body: "Your application has been reviewed. Please contact admissions for details.",
+      priority: "normal",
+    },
+    enrolled: {
+      title: "Welcome — You're Enrolled!",
+      body: "You have been officially enrolled. Check your schedule and orientation details.",
+      priority: "high",
+    },
+  };
+
+  const msg = statusMessages[status];
+  if (!msg) return;
+
+  await supabase.from("in_app_notifications").insert({
+    user_id: userId,
+    title: msg.title,
+    body: msg.body,
+    category: "admissions",
+    priority: msg.priority,
+    link_url: status === "enrolled" ? "/schedule" : null,
+    related_entity_type: "application",
+    related_entity_id: null,
+  });
+}
+
 export async function notifyDisbursementUpdate(
   studentId: string,
   status: string

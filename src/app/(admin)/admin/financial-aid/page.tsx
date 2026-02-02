@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DollarSign, FileText, Users, TrendingUp, Plus } from "lucide-react";
 import Link from "next/link";
+import { BatchDisbursements } from "./batch-disbursements";
 
 export const metadata = {
   title: "Financial Aid | Admin Dashboard",
@@ -53,6 +54,17 @@ export default async function FinancialAidPage() {
     (sum, a) => sum + (a.current_balance || 0),
     0
   );
+
+  // Get pending disbursements for batch release
+  const { data: pendingDisbursements } = await supabase
+    .from("disbursements")
+    .select(`
+      id, amount, scheduled_date, status,
+      student:students(first_name, last_name, student_number),
+      award:financial_aid_awards(award_type, award_name)
+    `)
+    .in("status", ["scheduled", "pending"])
+    .order("scheduled_date", { ascending: true });
 
   // Get recent disbursements
   const { data: recentDisbursements } = await supabase
@@ -211,6 +223,9 @@ export default async function FinancialAidPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Batch Disbursements */}
+      <BatchDisbursements disbursements={(pendingDisbursements || []) as any[]} />
 
       {/* Recent Disbursements */}
       <Card>

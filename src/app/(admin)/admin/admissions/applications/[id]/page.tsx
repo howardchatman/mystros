@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 import { getApplicationById } from "@/lib/actions/admin-students";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import {
   Clock,
 } from "lucide-react";
 import { ApplicationActions } from "./application-actions";
+import { EnrollmentChecklist } from "./enrollment-checklist";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -50,6 +52,19 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
 
   if (error || !application) {
     notFound();
+  }
+
+  // Fetch required documents for checklist
+  let requiredDocuments: { id: string; name: string; code: string }[] = [];
+  if (application.status === "accepted") {
+    const supabase = await createClient();
+    const { data: docs } = await supabase
+      .from("document_types")
+      .select("id, name, code")
+      .eq("is_required", true)
+      .eq("is_active", true)
+      .order("name");
+    requiredDocuments = (docs || []) as any[];
   }
 
   const campus = application.campus as { name?: string } | null;
@@ -88,6 +103,14 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
         <ApplicationActions
           applicationId={application.id}
           status={application.status}
+          applicantName={`${application.first_name} ${application.last_name}`}
+        />
+      )}
+
+      {/* Enrollment Checklist for Accepted Applications */}
+      {application.status === "accepted" && (
+        <EnrollmentChecklist
+          requiredDocuments={requiredDocuments}
           applicantName={`${application.first_name} ${application.last_name}`}
         />
       )}

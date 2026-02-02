@@ -255,6 +255,40 @@ async function checkHourMilestones(
   }
 }
 
+// ─── Bulk Mark Absent ─────────────────────────────────────
+
+export async function bulkMarkAbsent(
+  studentIds: string[],
+  campusId: string,
+  date?: string
+) {
+  if (studentIds.length === 0) return { error: "No students selected" };
+
+  const supabase = await createClient();
+  const userId = await getCurrentUserId();
+  if (!userId) return { error: "Not authenticated" };
+
+  const attendanceDate = date || new Date().toISOString().split("T")[0];
+
+  const records = studentIds.map((studentId) => ({
+    student_id: studentId,
+    campus_id: campusId,
+    attendance_date: attendanceDate,
+    status: "absent" as const,
+    actual_hours: 0,
+    theory_hours: 0,
+    practical_hours: 0,
+    is_correction: false,
+    recorded_by: userId,
+  }));
+
+  const { error } = await supabase.from("attendance_records").insert(records);
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/attendance");
+  return { success: true, count: studentIds.length };
+}
+
 // ─── Get Active Sessions ───────────────────────────────────
 
 export async function getActiveAttendanceSessions(campusId?: string) {
