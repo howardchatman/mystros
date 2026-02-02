@@ -45,25 +45,16 @@ export function LoginForm() {
 
   async function onSubmit(data: LoginFormData) {
     setIsLoading(true);
-    console.log("[Login] Attempting login for:", data.email);
 
     try {
-      console.log("[Login] Creating Supabase client...");
-      console.log("[Login] URL:", process.env["NEXT_PUBLIC_SUPABASE_URL"]);
-
       const supabase = createClient();
-      console.log("[Login] Client created, calling signInWithPassword...");
 
-      // Sign in with Supabase client-side
       const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
 
-      console.log("[Login] Auth response received");
-
       if (error) {
-        console.error("[Login] Auth error:", error.message);
         toast.error(error.message || "Invalid email or password");
         return;
       }
@@ -73,31 +64,31 @@ export function LoginForm() {
         return;
       }
 
-      console.log("[Login] Auth success, user:", authData.user.id);
-
-      // Get user profile to determine redirect
+      // Check if account is active
       const { data: profile } = await supabase
         .from("user_profiles")
-        .select("role")
+        .select("role, is_active")
         .eq("id", authData.user.id)
         .single();
 
-      console.log("[Login] Profile:", profile);
+      const userProfile = profile as { role?: string; is_active?: boolean } | null;
+
+      if (userProfile && !userProfile.is_active) {
+        await supabase.auth.signOut();
+        toast.error("This account has been deactivated. Please contact an administrator.");
+        return;
+      }
 
       // Determine redirect based on role
       let redirectTo = redirect || "/dashboard";
-      const userRole = (profile as { role?: string } | null)?.role;
+      const userRole = userProfile?.role;
       if (!redirect && userRole && adminRoles.includes(userRole)) {
         redirectTo = "/admin/dashboard";
       }
 
       toast.success("Welcome back!");
-      console.log("[Login] Redirecting to:", redirectTo);
-
-      // Full page navigation to ensure session is read
       window.location.href = redirectTo;
     } catch (error) {
-      console.error("[Login] Error:", error);
       toast.error("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -168,16 +159,6 @@ export function LoginForm() {
         Sign In
       </Button>
 
-      {/* Test accounts hint */}
-      <div className="mt-4 p-3 rounded-lg bg-brand-primary/20 border border-brand-accent/20">
-        <p className="text-xs text-brand-muted text-center">
-          <span className="font-medium text-brand-ice">Test Accounts (password: Mystros2024!)</span>
-          <br />
-          <span className="text-brand-ice/80">Admin:</span> admin@mystros.com
-          <br />
-          <span className="text-brand-ice/80">Student:</span> student@mystros.com
-        </p>
-      </div>
     </form>
   );
 }
