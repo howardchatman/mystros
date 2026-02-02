@@ -85,13 +85,14 @@ export function StudentRosterTable({ students, total }: StudentRosterTableProps)
                   return (
                     <tr
                       key={student.id}
-                      className="hover:bg-muted/50 transition-colors"
+                      className="hover:bg-muted/50 transition-colors cursor-pointer"
+                      onClick={() => window.location.href = `/admin/students/${student.id}`}
                     >
                       <td className="py-3 px-2">
                         <div>
-                          <p className="text-sm font-medium text-foreground">
+                          <Link href={`/admin/students/${student.id}`} className="text-sm font-medium text-foreground hover:text-primary">
                             {student.first_name} {student.last_name}
-                          </p>
+                          </Link>
                           <p className="text-xs text-muted-foreground font-mono">
                             {student.student_number}
                           </p>

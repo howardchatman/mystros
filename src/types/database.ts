@@ -1101,6 +1101,188 @@ export interface Database {
           created_by?: string | null;
         };
       };
+      competency_definitions: {
+        Row: {
+          id: string;
+          program_id: string;
+          category: string;
+          name: string;
+          description: string | null;
+          sort_order: number;
+          milestone_hours: number | null;
+          is_required: boolean;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          program_id: string;
+          category: string;
+          name: string;
+          description?: string | null;
+          sort_order?: number;
+          milestone_hours?: number | null;
+          is_required?: boolean;
+          is_active?: boolean;
+        };
+        Update: {
+          id?: string;
+          program_id?: string;
+          category?: string;
+          name?: string;
+          description?: string | null;
+          sort_order?: number;
+          milestone_hours?: number | null;
+          is_required?: boolean;
+          is_active?: boolean;
+        };
+      };
+      student_competencies: {
+        Row: {
+          id: string;
+          student_id: string;
+          competency_definition_id: string;
+          completed_at: string | null;
+          evaluated_by: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          student_id: string;
+          competency_definition_id: string;
+          completed_at?: string | null;
+          evaluated_by?: string | null;
+          notes?: string | null;
+        };
+        Update: {
+          id?: string;
+          student_id?: string;
+          competency_definition_id?: string;
+          completed_at?: string | null;
+          evaluated_by?: string | null;
+          notes?: string | null;
+        };
+      };
+      sap_configurations: {
+        Row: {
+          id: string;
+          program_id: string;
+          evaluation_interval_hours: number;
+          min_completion_rate: number;
+          max_timeframe_percentage: number;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          program_id: string;
+          evaluation_interval_hours?: number;
+          min_completion_rate?: number;
+          max_timeframe_percentage?: number;
+          is_active?: boolean;
+        };
+        Update: {
+          id?: string;
+          program_id?: string;
+          evaluation_interval_hours?: number;
+          min_completion_rate?: number;
+          max_timeframe_percentage?: number;
+          is_active?: boolean;
+        };
+      };
+      sap_evaluations: {
+        Row: {
+          id: string;
+          student_id: string;
+          evaluation_date: string;
+          evaluation_point: string | null;
+          hours_attempted: number;
+          hours_completed: number;
+          completion_rate: number;
+          cumulative_gpa: number | null;
+          max_timeframe_percentage: number | null;
+          is_within_max_timeframe: boolean;
+          status: SapStatus;
+          previous_status: SapStatus | null;
+          academic_plan_required: boolean;
+          appeal_submitted: boolean;
+          appeal_date: string | null;
+          appeal_decision: string | null;
+          appeal_decision_date: string | null;
+          appeal_reason: string | null;
+          evaluated_by: string | null;
+          notes: string | null;
+          override_status: SapStatus | null;
+          override_reason: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          student_id: string;
+          evaluation_date: string;
+          evaluation_point?: string | null;
+          hours_attempted: number;
+          hours_completed: number;
+          completion_rate: number;
+          cumulative_gpa?: number | null;
+          max_timeframe_percentage?: number | null;
+          is_within_max_timeframe?: boolean;
+          status: SapStatus;
+          previous_status?: SapStatus | null;
+          academic_plan_required?: boolean;
+          appeal_submitted?: boolean;
+          evaluated_by?: string | null;
+          notes?: string | null;
+        };
+        Update: {
+          id?: string;
+          student_id?: string;
+          evaluation_date?: string;
+          hours_attempted?: number;
+          hours_completed?: number;
+          completion_rate?: number;
+          status?: SapStatus;
+          evaluated_by?: string | null;
+          notes?: string | null;
+          override_status?: SapStatus | null;
+          override_reason?: string | null;
+        };
+      };
+      student_milestones: {
+        Row: {
+          id: string;
+          student_id: string;
+          milestone_type: string;
+          milestone_name: string;
+          achieved_at: string;
+          recorded_by: string | null;
+          notes: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          student_id: string;
+          milestone_type: string;
+          milestone_name: string;
+          achieved_at?: string;
+          recorded_by?: string | null;
+          notes?: string | null;
+        };
+        Update: {
+          id?: string;
+          student_id?: string;
+          milestone_type?: string;
+          milestone_name?: string;
+          achieved_at?: string;
+          recorded_by?: string | null;
+          notes?: string | null;
+        };
+      };
       audit_log: {
         Row: {
           id: string;
@@ -1198,3 +1380,8 @@ export type Disbursement = Tables<"disbursements">;
 export type StudentAccount = Tables<"student_accounts">;
 export type Charge = Tables<"charges">;
 export type Payment = Tables<"payments">;
+export type CompetencyDefinition = Tables<"competency_definitions">;
+export type StudentCompetency = Tables<"student_competencies">;
+export type SapConfiguration = Tables<"sap_configurations">;
+export type SapEvaluation = Tables<"sap_evaluations">;
+export type StudentMilestone = Tables<"student_milestones">;
