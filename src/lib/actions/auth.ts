@@ -54,9 +54,18 @@ export async function signIn(
   // Fetch user profile to determine redirect
   const { data: profile } = await supabase
     .from("user_profiles")
-    .select("role")
+    .select("role, is_active")
     .eq("id", data.user.id)
     .single();
+
+  // Block deactivated accounts
+  if (profile && !profile.is_active) {
+    await supabase.auth.signOut();
+    return {
+      success: false,
+      error: "This account has been deactivated. Please contact an administrator.",
+    };
+  }
 
   // Update last login timestamp
   await supabase
