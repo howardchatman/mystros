@@ -50,10 +50,34 @@ export function HeroSectionV2({ className }: HeroSectionV2Props) {
   }, []);
 
   return (
-    <section className={cn("relative min-h-screen overflow-hidden", className)}>
-      {/* Image Slideshow Background */}
-      <div className="absolute inset-0 z-0">
-        {/* Slideshow images with crossfade */}
+    <section className={cn("relative overflow-hidden", className)}>
+      {/* ── Mobile: Contained image slideshow at top ── */}
+      <div className="relative md:hidden w-full h-[50vh] overflow-hidden">
+        {HERO_IMAGES.map((src, index) => (
+          <div
+            key={src}
+            className={cn(
+              "absolute inset-0 transition-opacity duration-1000",
+              index === currentImageIndex ? "opacity-100" : "opacity-0"
+            )}
+          >
+            <Image
+              src={src}
+              alt={`Mystros Barber Academy ${index + 1}`}
+              fill
+              className="object-cover object-top"
+              priority={index === 0}
+              sizes="100vw"
+            />
+          </div>
+        ))}
+        {/* Gradient fade into content below */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-bg" />
+        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-brand-bg to-transparent" />
+      </div>
+
+      {/* ── Desktop: Full-screen background slideshow ── */}
+      <div className="absolute inset-0 z-0 hidden md:block">
         {HERO_IMAGES.map((src, index) => (
           <div
             key={src}
@@ -81,9 +105,8 @@ export function HeroSectionV2({ className }: HeroSectionV2Props) {
         <div className="absolute -bottom-20 -right-20 h-[500px] w-[500px] rounded-full bg-brand-primary/30 blur-[120px] animate-glow-pulse" style={{ animationDelay: '1.5s' }} />
       </div>
 
-
       {/* Main Content */}
-      <div className="container-wide relative z-10 flex min-h-screen flex-col items-center justify-center py-20">
+      <div className="container-wide relative z-10 flex flex-col items-center justify-center py-12 md:min-h-screen md:py-20 bg-brand-bg md:bg-transparent -mt-16 md:mt-0">
         {/* Logo with glow */}
         <div
           className={cn(
@@ -229,11 +252,11 @@ export function HeroSectionV2({ className }: HeroSectionV2Props) {
         </div>
       </div>
 
-      {/* Bottom fade gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-brand-bg to-transparent z-10" />
+      {/* Bottom fade gradient (desktop only) */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-brand-bg to-transparent z-10 hidden md:block" />
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+      {/* Scroll indicator (desktop only) */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 hidden md:flex">
         <div className="flex flex-col items-center gap-2 text-white/50">
           <span className="text-xs uppercase tracking-widest">Scroll</span>
           <div className="h-8 w-[2px] bg-gradient-to-b from-white/50 to-transparent animate-pulse" />
