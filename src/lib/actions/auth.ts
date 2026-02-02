@@ -199,6 +199,12 @@ export async function createUser(
   role: UserRole = "student",
   phone?: string
 ): Promise<AuthResult> {
+  // Verify caller is superadmin
+  const caller = await getUser();
+  if (!caller || caller.role !== "superadmin") {
+    return { success: false, error: "Only superadmins can create users." };
+  }
+
   const adminSupabase = createAdminClient();
 
   // Create auth user
@@ -244,9 +250,41 @@ export async function createUser(
     };
   }
 
+  revalidatePath("/admin/settings");
+
   return {
     success: true,
   };
+}
+
+/**
+ * Update a user's role (superadmin only)
+ */
+export async function updateUserRole(
+  userId: string,
+  newRole: UserRole
+): Promise<AuthResult> {
+  const caller = await getUser();
+  if (!caller || caller.role !== "superadmin") {
+    return { success: false, error: "Only superadmins can change roles." };
+  }
+
+  if (caller.id === userId) {
+    return { success: false, error: "You cannot change your own role." };
+  }
+
+  const adminSupabase = createAdminClient();
+  const { error } = await adminSupabase
+    .from("user_profiles")
+    .update({ role: newRole })
+    .eq("id", userId);
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath("/admin/settings");
+  return { success: true };
 }
 
 /**

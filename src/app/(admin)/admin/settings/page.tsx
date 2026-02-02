@@ -2,6 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Building2, GraduationCap, FileText, Users } from "lucide-react";
+import { AddUserForm } from "./add-user-form";
+import { AdminUsersTable } from "./admin-users-table";
 
 export const metadata = {
   title: "Settings | Admin Dashboard",
@@ -34,7 +36,11 @@ export default async function SettingsPage() {
     .from("user_profiles")
     .select("*")
     .neq("role", "student")
+    .eq("is_active", true)
     .order("last_name");
+
+  // Get current user ID
+  const { data: { user: currentAuthUser } } = await supabase.auth.getUser();
 
   return (
     <div className="space-y-6">
@@ -199,36 +205,11 @@ export default async function SettingsPage() {
           <CardDescription>Staff and administrator accounts</CardDescription>
         </CardHeader>
         <CardContent>
-          {!adminUsers || adminUsers.length === 0 ? (
-            <p className="text-center py-6 text-muted-foreground">No admin users found.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Name</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Email</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Role</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {adminUsers.map((user) => (
-                    <tr key={user.id} className="border-b border-border hover:bg-muted/50">
-                      <td className="py-3 px-4 font-medium text-foreground">
-                        {user.first_name} {user.last_name}
-                      </td>
-                      <td className="py-3 px-4 text-sm text-muted-foreground">{user.email}</td>
-                      <td className="py-3 px-4">
-                        <Badge variant="outline" className="capitalize">
-                          {user.role?.replace(/_/g, " ")}
-                        </Badge>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          <AddUserForm />
+          <AdminUsersTable
+            adminUsers={adminUsers || []}
+            currentUserId={currentAuthUser?.id}
+          />
         </CardContent>
       </Card>
     </div>
