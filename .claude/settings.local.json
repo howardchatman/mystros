@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix admin sign-in by syncing auth session to cookies\n\nThe browser Supabase client was using @supabase/supabase-js which only\nstores sessions in localStorage. The server-side auth checks read from\ncookies, so the session was never visible server-side. Switched to\ncreateBrowserClient from @supabase/ssr which writes to both localStorage\nand cookies. Re-enabled middleware session refresh to keep cookies alive.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push)",
+      "Bash(npm ls:*)",
+      "Bash(npm install:*)",
+      "Bash(git commit:*)",
+      "Bash(npx vercel:*)",
+      "Bash(curl:*)",
+      "Bash(printf:*)",
+      "Bash(npx next build:*)",
+      "Bash(git push:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(SRK=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpaGxydnNmY2hkd3hqZ2ltbGVrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2OTQ4ODY4NiwiZXhwIjoyMDg1MDY0Njg2fQ.eB6XYCtaZLVtinmuoksQkf7oRJYly08RE9NJ4coYZkQ\")",
+      "Bash(ANON=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpaGxydnNmY2hkd3hqZ2ltbGVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk0ODg2ODYsImV4cCI6MjA4NTA2NDY4Nn0.5Uusd4yBWa5xqsBVYNhoYs3MlRfYF5MHUGuCYysotu4\")",
+      "Bash(BASE=\"https://lihlrvsfchdwxjgimlek.supabase.co/rest/v1/user_profiles\")",
+      "Bash(for EMAIL in \"eros@chatmanconcierge.com\" \"admin@demo.com\" \"admin@mystros.com\" \"teacher@demo.com\" \"compliance@demo.com\" \"cashier@demo.com\")",
+      "Bash(do echo \"Deactivating $EMAIL...\")",
+      "Bash(done)",
+      "Bash(for EMAIL in \"teacher@demo.com\" \"compliance@demo.com\" \"cashier@demo.com\")",
+      "Bash(do echo \"Reactivating $EMAIL...\")",
+      "Bash(for UID in \"ba8b7a52-4279-4c98-85b6-8c1300852ec5\" \"d1000000-0000-0000-0000-000000000002\" \"d1000000-0000-0000-0000-000000000003\" \"d1000000-0000-0000-0000-000000000004\" \"d1000000-0000-0000-0000-000000000005\")",
+      "Bash(do curl -s -X PUT \"https://lihlrvsfchdwxjgimlek.supabase.co/auth/v1/admin/users/$UID\" -H \"Authorization: Bearer $SRK\" -H \"apikey: $ANON\" -H \"Content-Type: application/json\" -d '{\"\"password\"\":\"\"mystros1234\"\"}')",
+      "Bash(python -c:*)",
+      "Bash(for USERID in \"ba8b7a52-4279-4c98-85b6-8c1300852ec5\" \"d1000000-0000-0000-0000-000000000002\" \"d1000000-0000-0000-0000-000000000003\" \"d1000000-0000-0000-0000-000000000004\" \"d1000000-0000-0000-0000-000000000005\")",
+      "Bash(do echo -n \"Resetting $USERID... \")",
+      "Bash(findstr:*)",
+      "Bash(git -C \"c:\\\\Users\\\\howar\\\\mystros\" status)",
+      "Bash(git -C \"c:\\\\Users\\\\howar\\\\mystros\" add package.json package-lock.json src/types/database.ts src/components/ui/dialog.tsx src/components/ui/tabs.tsx src/components/ui/checkbox.tsx src/components/ui/slider.tsx src/lib/actions/attendance.ts src/lib/actions/sap.ts src/lib/actions/competencies.ts \"src/app/\\(admin\\)/admin/attendance/page.tsx\" \"src/app/\\(admin\\)/admin/attendance/attendance-manager.tsx\" \"src/app/\\(admin\\)/admin/attendance/clock-in-form.tsx\" \"src/app/\\(admin\\)/admin/attendance/active-sessions.tsx\" \"src/app/\\(admin\\)/admin/attendance/clock-out-modal.tsx\" \"src/app/\\(admin\\)/admin/attendance/attendance-table.tsx\" \"src/app/\\(admin\\)/admin/attendance/correction-requests.tsx\" \"src/app/\\(admin\\)/admin/students/[id]/page.tsx\" \"src/app/\\(admin\\)/admin/students/[id]/student-detail-client.tsx\" \"src/app/\\(admin\\)/admin/students/[id]/student-overview.tsx\" \"src/app/\\(admin\\)/admin/students/[id]/student-attendance-section.tsx\" \"src/app/\\(admin\\)/admin/students/[id]/student-sap-section.tsx\" \"src/app/\\(admin\\)/admin/students/[id]/student-competencies-section.tsx\" src/components/admin/student-roster-table.tsx supabase/migrations/00006_phase1_competencies.sql)",
+      "Bash(npx supabase db push:*)",
+      "Bash(dir /b \"c:\\\\Users\\\\howar\\\\mystros\\\\src\")",
+      "Bash(git status:*)",
+      "Bash(ls:*)",
+      "Bash(wc:*)"
+    ]
+  }
+}
