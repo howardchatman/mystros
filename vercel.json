@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/email-sequences",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/abandonment-check",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}

@@ -338,3 +338,208 @@ export function graduationCongratulationsEmail(params: {
     `),
   };
 }
+
+// ─── Phase 9 Email Sequence Templates ──────────────────────────────────
+
+export function newLeadWelcomeEmail(params: {
+  firstName: string;
+}): { subject: string; html: string } {
+  const { firstName } = params;
+
+  return {
+    subject: "Thanks for your interest in Mystros Barber Academy!",
+    html: layout(`
+      <h2 style="margin:0 0 16px;color:#0f172a;">Hi ${firstName}!</h2>
+      <p style="color:#334155;line-height:1.6;">
+        Thank you for your interest in Mystros Barber Academy. We're excited that you're considering a career in barbering!
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        At Mystros, we offer hands-on training from experienced barbers who are passionate about helping you succeed. Our programs include:
+      </p>
+      <ul style="color:#334155;line-height:1.8;">
+        <li><strong>Class A Barber Program</strong> (1,500 hours) — Full barbering license</li>
+        <li><strong>Barber Crossover Program</strong> (300 hours) — For licensed cosmetologists</li>
+        <li><strong>Instructor Program</strong> (750 hours) — Teach the next generation</li>
+      </ul>
+      <p style="color:#334155;line-height:1.6;">
+        Ready to take the next step? Start your application today!
+      </p>
+      <table cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr><td style="background:#f59e0b;border-radius:6px;padding:12px 24px;">
+      <a href="https://mystrosbarber.com/apply" style="color:#ffffff;text-decoration:none;font-weight:bold;">Apply Now</a>
+      </td></tr>
+      </table>
+      <p style="color:#334155;line-height:1.6;">
+        Questions? Reply to this email or call us at <a href="tel:+17139992904" style="color:#f59e0b;">(713) 999-2904</a>.
+      </p>
+    `),
+  };
+}
+
+export function newLeadFollowUpEmail(params: {
+  firstName: string;
+}): { subject: string; html: string } {
+  const { firstName } = params;
+
+  return {
+    subject: "Still thinking about barber school?",
+    html: layout(`
+      <h2 style="margin:0 0 16px;color:#0f172a;">Hi ${firstName},</h2>
+      <p style="color:#334155;line-height:1.6;">
+        We noticed you haven't started your application yet — no worries, we're here when you're ready!
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        Here's why students choose Mystros:
+      </p>
+      <ul style="color:#334155;line-height:1.8;">
+        <li><strong>Hands-on Training</strong> — Work with real clients from day one</li>
+        <li><strong>Financial Aid Available</strong> — Federal Pell Grants and loans accepted</li>
+        <li><strong>Flexible Schedules</strong> — Day and evening classes to fit your life</li>
+        <li><strong>Career Support</strong> — Job placement assistance after graduation</li>
+      </ul>
+      <p style="margin:16px 0;padding:16px;background:#f8fafc;border-radius:8px;color:#334155;font-style:italic;">
+        "Mystros gave me the skills and confidence to open my own shop. The instructors really care about your success." — Marcus T., Class of 2024
+      </p>
+      <table cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr><td style="background:#f59e0b;border-radius:6px;padding:12px 24px;">
+      <a href="https://mystrosbarber.com/apply" style="color:#ffffff;text-decoration:none;font-weight:bold;">Start Your Application</a>
+      </td></tr>
+      </table>
+    `),
+  };
+}
+
+export function newLeadFinalEmail(params: {
+  firstName: string;
+}): { subject: string; html: string } {
+  const { firstName } = params;
+
+  return {
+    subject: "Questions? We're here to help",
+    html: layout(`
+      <h2 style="margin:0 0 16px;color:#0f172a;">Hi ${firstName},</h2>
+      <p style="color:#334155;line-height:1.6;">
+        We wanted to reach out one more time to see if you have any questions about Mystros Barber Academy or the enrollment process.
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        We'd love to show you around! <strong>Schedule a campus tour</strong> to meet our instructors, see our facilities, and learn what makes Mystros special.
+      </p>
+      <table cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr>
+        <td style="background:#f59e0b;border-radius:6px;padding:12px 24px;margin-right:12px;">
+        <a href="https://mystrosbarber.com/contact" style="color:#ffffff;text-decoration:none;font-weight:bold;">Schedule a Tour</a>
+        </td>
+      </tr>
+      </table>
+      <p style="color:#334155;line-height:1.6;">
+        Or reach out directly:
+      </p>
+      <ul style="color:#334155;line-height:1.8;list-style:none;padding:0;">
+        <li>&#128222; <a href="tel:+17139992904" style="color:#f59e0b;">(713) 999-2904</a></li>
+        <li>&#128231; <a href="mailto:admissions@mystrosbarber.com" style="color:#f59e0b;">admissions@mystrosbarber.com</a></li>
+      </ul>
+      <p style="color:#334155;line-height:1.6;">
+        We hope to hear from you soon!
+      </p>
+    `),
+  };
+}
+
+export function applicationReminderEmail(params: {
+  firstName: string;
+  applicationLink: string;
+}): { subject: string; html: string } {
+  const { firstName, applicationLink } = params;
+
+  return {
+    subject: "Your application is waiting!",
+    html: layout(`
+      <h2 style="margin:0 0 16px;color:#0f172a;">Hi ${firstName},</h2>
+      <p style="color:#334155;line-height:1.6;">
+        We noticed you started an application but haven't finished yet. Your progress has been saved — pick up right where you left off!
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        Completing your application is the first step toward a rewarding career in barbering. Classes fill up quickly, so don't wait!
+      </p>
+      <table cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr><td style="background:#f59e0b;border-radius:6px;padding:12px 24px;">
+      <a href="${applicationLink}" style="color:#ffffff;text-decoration:none;font-weight:bold;">Continue Application</a>
+      </td></tr>
+      </table>
+      <p style="color:#334155;line-height:1.6;">
+        Need help? Our admissions team is ready to assist. Call <a href="tel:+17139992904" style="color:#f59e0b;">(713) 999-2904</a> or reply to this email.
+      </p>
+    `),
+  };
+}
+
+export function applicationFinalReminderEmail(params: {
+  firstName: string;
+  applicationLink: string;
+}): { subject: string; html: string } {
+  const { firstName, applicationLink } = params;
+
+  return {
+    subject: "Last chance to complete your application",
+    html: layout(`
+      <h2 style="margin:0 0 16px;color:#0f172a;">Hi ${firstName},</h2>
+      <p style="color:#334155;line-height:1.6;">
+        This is a friendly reminder that your application to Mystros Barber Academy is still incomplete.
+      </p>
+      <p style="margin:16px 0;padding:12px 16px;background:#fffbeb;border-left:4px solid #f59e0b;border-radius:4px;color:#334155;">
+        <strong>Don't miss out!</strong> Our next class is filling up and we'd hate for you to miss your spot.
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        Take a few minutes to finish your application today.
+      </p>
+      <table cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr><td style="background:#f59e0b;border-radius:6px;padding:12px 24px;">
+      <a href="${applicationLink}" style="color:#ffffff;text-decoration:none;font-weight:bold;">Complete Application</a>
+      </td></tr>
+      </table>
+      <p style="color:#334155;line-height:1.6;">
+        If you've decided not to pursue barbering at this time, no worries — we wish you the best! If your plans change, your application will be here.
+      </p>
+    `),
+  };
+}
+
+export function acceptedEnrollmentReminderEmail(params: {
+  firstName: string;
+  enrollmentDeadline?: string;
+}): { subject: string; html: string } {
+  const { firstName, enrollmentDeadline } = params;
+  const deadlineText = enrollmentDeadline
+    ? `Please complete enrollment by <strong>${enrollmentDeadline}</strong> to secure your spot.`
+    : "Please complete your enrollment as soon as possible to secure your spot.";
+
+  return {
+    subject: "Next steps to finalize your enrollment",
+    html: layout(`
+      <h2 style="margin:0 0 16px;color:#0f172a;">Congratulations again, ${firstName}!</h2>
+      <p style="color:#334155;line-height:1.6;">
+        Your application to Mystros Barber Academy has been accepted — now let's get you enrolled!
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        ${deadlineText}
+      </p>
+      <p style="color:#334155;line-height:1.6;">
+        <strong>To finalize enrollment, you'll need to:</strong>
+      </p>
+      <ol style="color:#334155;line-height:1.8;">
+        <li>Complete the enrollment agreement</li>
+        <li>Submit required documents (ID, proof of education)</li>
+        <li>Complete FAFSA if applying for financial aid (School Code: 042609)</li>
+        <li>Meet with financial aid to review your award</li>
+      </ol>
+      <table cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr><td style="background:#f59e0b;border-radius:6px;padding:12px 24px;">
+      <a href="https://mystrosbarber.com/login" style="color:#ffffff;text-decoration:none;font-weight:bold;">Log In to Complete Enrollment</a>
+      </td></tr>
+      </table>
+      <p style="color:#334155;line-height:1.6;">
+        Questions? Call our admissions team at <a href="tel:+17139992904" style="color:#f59e0b;">(713) 999-2904</a>.
+      </p>
+    `),
+  };
+}

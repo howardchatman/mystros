@@ -21,6 +21,7 @@ import {
   Upload,
   User,
   ClipboardCheck,
+  TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { signOut } from "@/lib/actions/auth";
@@ -49,6 +50,8 @@ const navItems: NavItem[] = [
     children: [
       { href: "/admin/admissions/leads", label: "Leads" },
       { href: "/admin/admissions/applications", label: "Applications" },
+      { href: "/admin/enrollment-funnel", label: "Enrollment Funnel" },
+      { href: "/admin/admissions/abandoned", label: "Abandoned Apps" },
     ],
   },
   {

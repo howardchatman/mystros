@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Clock, DollarSign, GraduationCap, Scissors } from "lucide-react";
+import { LeadCaptureForm } from "@/components/marketing/lead-capture-form";
 
 export const metadata = {
   title: "Programs",
@@ -110,23 +112,16 @@ export default function ProgramsPage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* Lead Capture */}
       <section className="py-16 px-4 bg-brand-primary/20">
-        <div className="container mx-auto text-center">
-          <h2 className="text-2xl font-display font-bold text-brand-text mb-4">
-            Ready to Start Your Career?
-          </h2>
-          <p className="text-brand-muted mb-6">
-            Financial aid available for those who qualify. FAFSA Code: 042609
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/apply">
-              <Button size="lg">Apply Now</Button>
-            </Link>
-            <Link href="/contact">
-              <Button variant="outline" size="lg">Contact Us</Button>
-            </Link>
-          </div>
+        <div className="container mx-auto max-w-lg">
+          <Suspense fallback={<div className="h-96 animate-pulse bg-brand-elevated rounded-lg" />}>
+            <LeadCaptureForm
+              heading="Ready to Start Your Career?"
+              description="Get more info about our programs and financial aid. FAFSA Code: 042609"
+              source="programs_page"
+            />
+          </Suspense>
         </div>
       </section>
 

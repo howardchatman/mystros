@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DollarSign, GraduationCap, FileText, CheckCircle, Calculator, HelpCircle, ExternalLink } from "lucide-react";
+import { LeadCaptureForm } from "@/components/marketing/lead-capture-form";
 
 export const metadata = {
   title: "Financial Aid | Mystros Barber Academy",
@@ -268,23 +270,16 @@ export default function FinancialAidPage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* Lead Capture CTA */}
       <section className="py-16 px-4 bg-brand-accent/10">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-display font-bold text-brand-text mb-4">
-            Questions About Financial Aid?
-          </h2>
-          <p className="text-brand-muted mb-8 max-w-2xl mx-auto">
-            Our financial aid team is here to help you navigate your options and find the best solution for your situation.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/contact">
-              <Button size="lg">Contact Financial Aid</Button>
-            </Link>
-            <Link href="/apply">
-              <Button variant="outline" size="lg">Apply Now</Button>
-            </Link>
-          </div>
+        <div className="container mx-auto max-w-lg">
+          <Suspense fallback={<div className="h-96 animate-pulse bg-brand-elevated rounded-lg" />}>
+            <LeadCaptureForm
+              heading="Questions About Financial Aid?"
+              description="Our team is here to help you navigate your options and find the best solution."
+              source="financial_aid_page"
+            />
+          </Suspense>
         </div>
       </section>
 

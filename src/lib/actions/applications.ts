@@ -118,7 +118,9 @@ export async function updateApplicationStep(
     dbData[dbKey] = value;
   }
 
-  dbData["updated_at"] = new Date().toISOString();
+  const now = new Date().toISOString();
+  dbData["updated_at"] = now;
+  dbData["last_activity_at"] = now;
 
   const { error } = await supabase
     .from("applications")

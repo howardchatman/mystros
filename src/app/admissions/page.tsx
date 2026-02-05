@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, FileText, Calendar, Users, Phone, Mail, Clock } from "lucide-react";
+import { LeadCaptureForm } from "@/components/marketing/lead-capture-form";
 
 export const metadata = {
   title: "Admissions | Mystros Barber Academy",
@@ -210,18 +212,16 @@ export default function AdmissionsPage() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* Lead Capture CTA */}
       <section className="py-16 px-4 bg-brand-accent/10">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-display font-bold text-brand-text mb-4">
-            Ready to Apply?
-          </h2>
-          <p className="text-brand-muted mb-8 max-w-2xl mx-auto">
-            Take the first step toward your barbering career. Our admissions team is ready to help you every step of the way.
-          </p>
-          <Link href="/apply">
-            <Button size="lg">Start Your Application</Button>
-          </Link>
+        <div className="container mx-auto max-w-lg">
+          <Suspense fallback={<div className="h-96 animate-pulse bg-brand-elevated rounded-lg" />}>
+            <LeadCaptureForm
+              heading="Have Questions? We're Here to Help"
+              description="Get personalized info about admissions, financial aid, and program options."
+              source="admissions_page"
+            />
+          </Suspense>
         </div>
       </section>
 
